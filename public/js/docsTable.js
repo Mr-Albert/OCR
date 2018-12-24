@@ -41,7 +41,7 @@ function highlightAdapter(imageSrc,highlights)
     }
     // console.log(highlightDivs);
     content = "<div id='container' style='position:relative;'>\
-    <img src='" + imageSrc + "' />"+highlightDivs+"</div>";
+    <img src='/image/" + imageSrc + "' />"+highlightDivs+"</div>";
     return content;
 }
 
