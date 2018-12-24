@@ -22,7 +22,7 @@ class DocViewerAPI extends Controller
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
-            $testURl =  Config::get('solr.url').":".Config::get('solr.port')."/solr/".Config::get('solr.collection')."/select?q=id:" . urlencode($id) . ("&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+            $testURl =  Config('solr.url').":".Config('solr.port')."/solr/".Config('solr.collection')."/select?q=id:" . urlencode($id) . ("&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
             curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -53,25 +53,23 @@ class DocViewerAPI extends Controller
     {
 
         $filter = json_decode($request->input('pq_filter'));
-        // if(array_key_exists())
-        if (property_exists("data", $filter) && property_exists("dataIndx", $filter->data[0])) {
+        // print_r($filter);
+        // return ;
+        if (gettype($filter)=="object" &&property_exists($filter,"data") && property_exists( $filter->data[0],"dataIndx")) {
             $srchField = $filter->data[0]->dataIndx;
             $srchValue = $filter->data[0]->value;
-            // return ($filter->data[0]->dataIndx);
         } else {
             $srchField = "content";
             $srchValue = "*";
 
         }
         $ch = curl_init();
-        $testURl =  Config::get('solr.url').":".Config::get('solr.port')."/solr/".Config::get('solr.collection')."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+        $testURl =  Config('solr.url').":".Config('solr.port')."/solr/".Config('solr.collection')."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
         //     echo $testURl;
         // set url
         curl_setopt($ch, CURLOPT_URL, $testURl);
-
         //return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
         // $output contains the output string
         $output = curl_exec($ch);
         if (curl_errno($ch)) {
@@ -87,17 +85,15 @@ class DocViewerAPI extends Controller
         foreach ($output["response"]["docs"] as $key => $value) {
             $value["content"] = $output["highlighting"][$value["id"]]["content"][0];
             $responseArr[] = ($value);
-            // echo"<br>";
         }
         return ($responseArr);
     }
     public function down(Request $request)
     {
-       
         $name = $request->get("fileName");
         $fileExtention = substr($name, strrpos($name, ".") + 1);
         $fileExtention = $this->extentionsMap[strtolower($fileExtention)];
-        $file = "app/public/" .$fileExtention."/". $name;
+        $file = "files/" .$fileExtention."/". $name;
         $headers = array('Content-Type' => 'image/jpeg');
 
         $rspns = response()->download(storage_path($file));
@@ -118,14 +114,14 @@ class DocViewerAPI extends Controller
             $fileExtention = $this->extentionsMap[strtolower($fileExtention)];
  
             Storage::disk('local')->putFileAs(
-                'public/' . $fileExtention,
+                'files/' . $fileExtention,
                 $uploadedFile,
                 $filename
             );
         }
-        $app_path = Config::get('appPath');
-        $file_path = $app_path . "/storage/app/public/" . $fileExtention . "/" . $filename;
-        $backEndUrl = Config::get('engine.url').':'.Config::get('engine.port').'/extract?path=' . $file_path;
+        $app_path = Config('appPath');
+        $file_path = $app_path . "files/" . $fileExtention . "/" . $filename;
+        $backEndUrl = Config('engine.url').':'.Config('engine.port').'/extract?path=' . $file_path;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
         //return the transfer as a string
