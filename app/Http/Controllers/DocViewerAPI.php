@@ -22,7 +22,7 @@ class DocViewerAPI extends Controller
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
-            $testURl =  Config('solr.url').":".Config('solr.port')."/solr/".Config('solr.collection')."/select?q=id:" . urlencode($id) . ("&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+            $testURl =  config('app.solr')['url'].":".config('app.solr')['port']."/solr/".config('app.solr')['collection']."/select?q=id:" . urlencode($id) . ("&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
             curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -64,8 +64,8 @@ class DocViewerAPI extends Controller
 
         }
         $ch = curl_init();
-        $testURl =  Config('solr.url').":".Config('solr.port')."/solr/".Config('solr.collection')."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-        //     echo $testURl;
+        $testURl =  config('app.solr')["url"].":".config('app.solr')["port"]."/solr/".config('app.solr')["collection"]."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+            // echo $testURl;
         // set url
         curl_setopt($ch, CURLOPT_URL, $testURl);
         //return the transfer as a string
@@ -119,9 +119,9 @@ class DocViewerAPI extends Controller
                 $filename
             );
         }
-        $app_path = Config('appPath');
+        $app_path = config('app.appPath');
         $file_path = $app_path . "files/" . $fileExtention . "/" . $filename;
-        $backEndUrl = Config('engine.url').':'.Config('engine.port').'/extract?path=' . $file_path;
+        $backEndUrl = config('app.engine')['url'].':'.config('app.engine')['port'].'/extract?path=' . $file_path;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
         //return the transfer as a string

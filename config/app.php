@@ -7,9 +7,9 @@ return [
             'port'=>env("SOLR_PORT","8983"),
             'collection'=>env("SOLR_COLLECTION","colelction1")
         ],
-    'solr'=>
+    'engine'=>
         [
-            'engine'=>env("engine_url","localhost"),
+            'url'=>env("engine_url","localhost"),
             'port'=>env("engine_port","8983")
         ],    
     'appPath'=>env('app_path','/'),    
@@ -27,6 +27,7 @@ return [
     */
 
     'name' => 'OCR',
+    'nametest' => 'OCRtest',
 
     /*
     |--------------------------------------------------------------------------
