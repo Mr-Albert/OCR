@@ -144,7 +144,8 @@ $(function () {
         title: '\
     <form action="/upload" method="post">\
     Files:<br>\
-    <input type="hidden" name="_csrf" value="<your_csrf_token>" />\
+    <input type="hidden" name="_token" value="'+$('meta[name="_token"]').attr('content')+'" />\
+    <input type="hidden" id="fileDescription" name="fileDescription" value="" />\
     <input class="ui-widget-header ui-widget-header ui-state-active" type="file" id="fileupload" name="files[]" data-url="/upload" />\
     <p id="loading"></p>\
     </form>',
@@ -173,9 +174,9 @@ $(function () {
         dataType: 'json',
         add: function (e, data) {
             var accepted = false,
-                describtion = "";
+            description = "";
 
-            $('#describtion').val(describtion);
+            $('#description').val(description);
             $("#dialog").dialog({
                 modal: true,
                 buttons: [{
@@ -183,12 +184,14 @@ $(function () {
                     icon: "ui-icon-heart",
                     click: function () {
                         accepted = true;
-                        describtion = $('#describtion').val();
+                        description = $('#description').val();
                         $("#dialog").dialog("close");
                         if (accepted) {
+                            $('#fileDescription').attr('value',description);
+                            console.log($('#fileDescription').attr('value'));
                             $('#loading').text('Uploading...');
-                            //data.files[0].describtion=describtion;
-                            console.log(describtion);
+                            //data.files[0].description=description;
+                            console.log(description);
                             console.log(data);
                             data.submit();
                         }
