@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use  Illuminate\Support\Facades\Route;
 
 class DocViewerAPI extends Controller
 {
@@ -93,7 +95,7 @@ class DocViewerAPI extends Controller
         $name = $request->get("fileName");
         $fileExtention = substr($name, strrpos($name, ".") + 1);
         $fileExtention = $this->extentionsMap[strtolower($fileExtention)];
-        $file = "files/" .$fileExtention."/". $name;
+        $file = "app/files/" .$fileExtention."/". $name;
         $headers = array('Content-Type' => 'image/jpeg');
 
         $rspns = response()->download(storage_path($file));
@@ -104,7 +106,7 @@ class DocViewerAPI extends Controller
     }
     public function up(Request $request)
     {
-
+        
         $files = [];
         foreach ($request->files as $file) {
             $uploadedFile = $file[0];
@@ -120,8 +122,8 @@ class DocViewerAPI extends Controller
             );
         }
         $app_path = config('app.appPath');
-        $file_path = $app_path . "files/" . $fileExtention . "/" . $filename;
-        $backEndUrl = config('app.engine')['url'].':'.config('app.engine')['port'].'/extract?path=' . $file_path;
+        $file_path = $app_path . "/app/files/" . $fileExtention . "/" . $filename;
+        $backEndUrl = config('app.engine')['url'].':'.config('app.engine')['port'].'/extract?path=' . $file_path."&fileDescription=".$request->fileDescription;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
         //return the transfer as a string
@@ -135,5 +137,18 @@ class DocViewerAPI extends Controller
         return response()->json([
             'fileLocation' => $backEndUrl,
         ]);
+    }
+    public function getImage(Request $request)
+    {
+        $image=Route::current()->parameter('imageName');
+        if($image!="")
+        {
+            $storagePath = storage_path('/app/files/images/'.$image);
+            return Image::make($storagePath)->response();
+        }
+        else 
+        {
+            return "{}";
+        }
     }
 }
