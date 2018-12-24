@@ -21,7 +21,6 @@ class DocViewerAPI extends Controller
     {
         $id = $request->input('id');
 		$srch = $request->input('srch');
-		$srch="الصادر";
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
