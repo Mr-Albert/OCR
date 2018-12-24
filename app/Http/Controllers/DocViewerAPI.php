@@ -20,7 +20,8 @@ class DocViewerAPI extends Controller
     public function detail(Request $request)
     {
         $id = $request->input('id');
-        
+		$srch = $request->input('srch');
+		$srch="الصادر";
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
@@ -46,7 +47,23 @@ class DocViewerAPI extends Controller
         }        
     } else {
             //gets details hocr from solr
-            $responseData = array("imageSrc" => "/" . $id, "fromtTopLefX" => "13", "fromtTopLefY" => "13");
+			$ch = curl_init();
+            $testURl =  config('app.solr')['url'].":".config('app.solr')['port']."/solr/".config('app.solr')['collection']."/select?q=(id:" . urlencode($id) .urlencode(" AND hocr:".$srch).(")&fl=highlighting&hl.fl=hocr&hl=on&hl.fragsize=0&wt=php");
+            curl_setopt($ch, CURLOPT_URL, $testURl);
+            //return the transfer as a string
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            // $output contains the output string
+            $output = curl_exec($ch);
+        			
+		if (curl_errno($ch)) {
+                // return "{}";
+                return array("type"=>"image","content"=>$id);
+            }
+            eval("\$output = " . $output . ";");
+        // close curl resource to free up system resources
+            curl_close($ch);
+			//print_r($output['highlighting'][$id]['hocr']);
+            $responseData = array("imageSrc" => "/".$id, "type" => "image","hocr"=>$output['highlighting'][$id]['hocr']);
             return $responseData;
         }
 
@@ -67,7 +84,7 @@ class DocViewerAPI extends Controller
         }
         $ch = curl_init();
         $testURl =  config('app.solr')["url"].":".config('app.solr')["port"]."/solr/".config('app.solr')["collection"]."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-            // echo $testURl;
+        //echo $testURl;
         // set url
         curl_setopt($ch, CURLOPT_URL, $testURl);
         //return the transfer as a string
@@ -95,7 +112,7 @@ class DocViewerAPI extends Controller
         $name = $request->get("fileName");
         $fileExtention = substr($name, strrpos($name, ".") + 1);
         $fileExtention = $this->extentionsMap[strtolower($fileExtention)];
-        $file = "app/files/" .$fileExtention."/". $name;
+        $file = "app/files/". $name;
         $headers = array('Content-Type' => 'image/jpeg');
 
         $rspns = response()->download(storage_path($file));
@@ -124,8 +141,10 @@ class DocViewerAPI extends Controller
         $app_path = config('app.appPath');
         $file_path = $app_path . "/app/files/" . $fileExtention . "/" . $filename;
         $backEndUrl = config('app.engine')['url'].':'.config('app.engine')['port'].'/extract?path=' . $file_path."&fileDescription=".$request->fileDescription;
+		//echo $backEndUrl;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, 500000);
         //return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // $output contains the output string
@@ -136,7 +155,7 @@ class DocViewerAPI extends Controller
 
         return response()->json([
             'fileLocation' => $backEndUrl,
-        ]);
+        ]); 
     }
     public function getImage(Request $request)
     {
