@@ -65,6 +65,7 @@ class DocViewerAPI extends Controller
         }
         $ch = curl_init();
         $testURl =  Config('solr.url').":".Config('solr.port')."/solr/".Config('solr.collection')."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+		echo $testURl;
         //     echo $testURl;
         // set url
         curl_setopt($ch, CURLOPT_URL, $testURl);
