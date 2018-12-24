@@ -13,7 +13,7 @@ function initDetail(ui) {
         success: function (responseData) {
             responseDataM=responseData;
             if (responseData.type == "image") {
-                $detail= $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter("/hocr.jpg",["457 108 489 125"]) + "</div>");
+                $detail= $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter("/hocr.jpg",["0 5 100 105","100 105 110 115"]) + "</div>");
 
             } else {
                 $detail=  $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + responseData.content + "</div>");
@@ -31,17 +31,19 @@ function highlightAdapter(imageSrc,highlights)
     var highlightDivs=""
     for (var i=0;i<highlights.length;i++)
     {
+        // x y x2 y2
         var currentDiv=highlights[i].split(" ");
         currentDiv[3]= parseInt(currentDiv[3])-parseInt(currentDiv[1]);
         currentDiv[2]= parseInt(currentDiv[2])-parseInt(currentDiv[0]);
-        console.log(currentDiv);
-        highlightDivs=highlightDivs+(" <div id='highlight' style='position:absolute;width:" + currentDiv[2]  + "px;height:" + currentDiv[3] + "px;top:" + currentDiv[0] + "px;left:" + currentDiv[1] + "px;background: rgba(255, 0, 0, 0.4);'></div>");
+        // console.log(currentDiv);
+        highlightDivs=highlightDivs+(" <div id='highlight' style='position:absolute;width:" + currentDiv[2]  + "px;height:" + currentDiv[3] + "px;top:" + currentDiv[1] + "px;left:" + currentDiv[0] + "px;background: rgba(255, 0, 0, 0.2);'></div>");
+        console.log(highlightDivs);
 
         
     }
     // console.log(highlightDivs);
     content = "<div id='container' style='position:relative;'>\
-    <img src='/image/" + imageSrc + "' />"+highlightDivs+"</div>";
+    <img src='/image" + imageSrc + "' />"+highlightDivs+"</div>";
     return content;
 }
 
@@ -87,8 +89,8 @@ $(function () {
             editable: false,
         },
         {
-            width: '80%',
-            title: "Content",
+            width: '70%',
+            title: "title",
             dataIndx: "content",
             filter: {
                 type: 'textbox',
@@ -96,15 +98,15 @@ $(function () {
             }
         },
         {
-            width: '20%',
+            minWidth: '20%',
             title: "File",
             dataIndx: "id",
             render:
             function (ui) {
-                console.log(ui);
+                // console.log(ui);
                 var id=ui.rowData.id;
                 var iconType=types[(id.substr(id.length - 3))]+".png";
-               return "<div id='"+id+"' ><a href='DOCSAPI/down?fileName="+id+"'  target='_blank'><img style='width:20%;height:20%;' src = '/"+iconType+"'' /></a></div>"; 
+               return "<div id='"+id+"' ><a href='DOCSAPI/down?fileName="+id+"'  target='_blank'><img style='margin-left:44%;width:12%;height:12%;' src = '/"+iconType+"'' /></a></div>"; 
             }
 
         }
@@ -117,7 +119,7 @@ $(function () {
         method: "GET",
         url: "/DOCSAPI",
         getData: function (dataJSON) {
-            console.log(dataJSON);
+            // console.log(dataJSON);
             return {
                 data: dataJSON
             };
@@ -188,11 +190,11 @@ $(function () {
                         $("#dialog").dialog("close");
                         if (accepted) {
                             $('#fileDescription').attr('value',description);
-                            console.log($('#fileDescription').attr('value'));
+                            // console.log($('#fileDescription').attr('value'));
                             $('#loading').text('Uploading...');
                             //data.files[0].description=description;
-                            console.log(description);
-                            console.log(data);
+                            // console.log(description);
+                            // console.log(data);
                             data.submit();
                         }
                     }
