@@ -64,14 +64,8 @@ class DocViewerAPI extends Controller
 
         }
         $ch = curl_init();
-<<<<<<< Updated upstream
-        $testURl =  Config('solr.url').":".Config('solr.port')."/solr/".Config('solr.collection')."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-		echo $testURl;
-        //     echo $testURl;
-=======
         $testURl =  config('app.solr')["url"].":".config('app.solr')["port"]."/solr/".config('app.solr')["collection"]."/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
             // echo $testURl;
->>>>>>> Stashed changes
         // set url
         curl_setopt($ch, CURLOPT_URL, $testURl);
         //return the transfer as a string
