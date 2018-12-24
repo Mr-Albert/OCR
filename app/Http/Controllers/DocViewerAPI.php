@@ -120,8 +120,9 @@ class DocViewerAPI extends Controller
             );
         }
         $app_path = config('app.appPath');
-        $file_path = $app_path . "files/" . $fileExtention . "/" . $filename;
+        $file_path = $app_path . "/app/files/" . $fileExtention . "/" . $filename;
         $backEndUrl = config('app.engine')['url'].':'.config('app.engine')['port'].'/extract?path=' . $file_path;
+		echo $backEndUrl;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
         //return the transfer as a string
