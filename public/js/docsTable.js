@@ -163,7 +163,7 @@ $(function () {
         {
             minWidth: '50%',
             title: "Describtion",
-            dataIndx: "content",
+            dataIndx: "fileDescribtion",
             filter: {
                 type: 'textbox',
                 listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
