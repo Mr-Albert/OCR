@@ -11,7 +11,7 @@ use Ixudra\Curl\Facades\Curl;
 class DocViewerAPI extends Controller
 {
     public $client;
-    private $extentionsMap = array("jpeg" => "images", "jpg" => "images", "pdf" => "pdfs", "png" => "images");
+    private $extentionsMap = array("jpeg" => "images", "jpg" => "images", "pdf" => "pdfs", "png" => "images","tif" => "images");
 
     public function __construct()
     {
@@ -32,7 +32,8 @@ class DocViewerAPI extends Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             // $output contains the output string
             $output = curl_exec($ch);
-            if (curl_errno($ch)) {
+        			
+		if (curl_errno($ch)) {
                 // return "{}";
                 return array("type" => "pdf", "content" => $id);
             }
