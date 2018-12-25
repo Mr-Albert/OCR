@@ -185,9 +185,9 @@ class DocViewerAPI extends Controller
             );
         }
         $app_path = config('app.appPath');
-        $file_path = $app_path . "/app/files/" . $fileExtention . "/" . $filename;
-        $backEndUrl = config('app.engine')['url'] . ':' . config('app.engine')['port'] . '/extract?path=' . $file_path . "&fileDescription=" . $request->fileDescription;
-        //echo $backEndUrl;
+        $file_path = $app_path . "app/files/" . $fileExtention . "/" . $filename;
+        $backEndUrl = "http://".config('app.engine')['url'] . ':' . config('app.engine')['port'] . '/extract?path=' . $file_path . "&fileDescription=" . $request->fileDescription;
+        echo $backEndUrl;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
         curl_setopt($ch, CURLOPT_TIMEOUT_MS, 500000);
