@@ -2,18 +2,21 @@ function initDetail(ui) {
     var rowData = ui.rowData;
     var content;
     var responseDataM;
-    var $detail;    
+    var $detail;
+	var searchValue=$("[name=content]").val();
+    
     $.ajax({
         url: "/DOCSAPI/details",
         method: "GET",
         async:false,
         data: {
-            id: rowData.id
+            id: rowData.id,
+			srch:searchValue
         },
         success: function (responseData) {
             responseDataM=responseData;
             if (responseData.type == "image") {
-                $detail= $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter("/hocr.jpg",["0 5 100 105","100 105 110 115"]) + "</div>");
+                $detail= $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter(rowData.id,responseData.hocr) + "</div>");
 
             } else {
                 $detail=  $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + responseData.content + "</div>");
@@ -33,17 +36,17 @@ function highlightAdapter(imageSrc,highlights)
     {
         // x y x2 y2
         var currentDiv=highlights[i].split(" ");
+        currentDiv[4]= parseInt(currentDiv[4])-parseInt(currentDiv[2]);
         currentDiv[3]= parseInt(currentDiv[3])-parseInt(currentDiv[1]);
-        currentDiv[2]= parseInt(currentDiv[2])-parseInt(currentDiv[0]);
         // console.log(currentDiv);
-        highlightDivs=highlightDivs+(" <div id='highlight' style='position:absolute;width:" + currentDiv[2]  + "px;height:" + currentDiv[3] + "px;top:" + currentDiv[1] + "px;left:" + currentDiv[0] + "px;background: rgba(255, 0, 0, 0.2);'></div>");
+        highlightDivs=highlightDivs+(" <div id='highlight' style='position:absolute;width:" + currentDiv[3]  + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(255, 0, 0, 0.2);'></div>");
         console.log(highlightDivs);
 
         
     }
     // console.log(highlightDivs);
     content = "<div id='container' style='position:relative;'>\
-    <img src='/image" + imageSrc + "' />"+highlightDivs+"</div>";
+    <img src='" + imageSrc + "' />"+highlightDivs+"</div>";
     return content;
 }
 

@@ -21,4 +21,4 @@ Route::get('/DOCSAPI/details', 'DocViewerAPI@detail')->name('detail');
 Route::get('/DOCS', 'DocViewer@index')->name('doc');
 Route::get('/DOCSAPI', 'DocViewerAPI@search')->name('docAPI');
 Route::get('/upload', 'DocViewer@upload')->name('load');
-Route::get('/image/{imageName?}', 'DocViewerAPI@getImage')->name('load');
+Route::get('/images/{imageName?}', 'DocViewerAPI@getImage')->name('load');
