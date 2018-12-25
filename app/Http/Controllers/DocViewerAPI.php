@@ -21,6 +21,8 @@ class DocViewerAPI extends Controller
     {
         $id = $request->input('id');
         $srch = $request->input('srch');
+        if($srch=="")
+            $srch="*";
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
@@ -32,7 +34,7 @@ class DocViewerAPI extends Controller
             $output = curl_exec($ch);
             if (curl_errno($ch)) {
                 // return "{}";
-                return array("type" => "image", "content" => $id);
+                return array("type" => "pdf", "content" => $id);
             }
             $output = array();
             eval("\$output = " . $output . ";");
@@ -71,43 +73,44 @@ class DocViewerAPI extends Controller
     {
 
         $filter = json_decode($request->input('pq_filter'));
-        $queryArrayp = array("content" => "*");
+        $queryArray = array("content" => "*");
 
         if ($request->input("srch") != '') {
-            $queryArrayp["content"] = $request->input("srch");
+            $queryArray["content"] = $request->input("srch");
         }
 
         if (gettype($filter) == "object" && property_exists($filter, "data")) {
             $filterData = $filter->data;
             foreach ($filterData as $filterDatum) {
                 if ($filterDatum->value == "") {
-                    $queryArrayp[$filterDatum->dataIndx] = "*";
+                    $queryArray[$filterDatum->dataIndx] = "*";
                 } else {
-                    $queryArrayp[$filterDatum->dataIndx] = $filterDatum->value;
+                    $queryArray[$filterDatum->dataIndx] = $filterDatum->value;
                 }
 
             }
         }
 
-        // print_r($queryArrayp);
+        // print_r($queryArray);
         // return;
 
         // Send a GET request to: http://www.foo.com/bar?foz=baz
-        $response = Curl::to(config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select")
-            ->withData($queryArrayp)
-            ->returnResponseObject()
-            ->get();
-        print_r($response);
-        echo"returning";
-        return;
+        // $solrConnectionString=config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select";
+        // $solrConnectionString="localhost:8000/testInComingQuery";
+        // $response = Curl::to($solrConnectionString)
+        //     ->withData($queryArray)
+        //     ->withResponseHeaders()
+        //     ->returnResponseObject()
+        //     ->enableDebug('/CurllogFile.txt')
+        //     ->get();
+        // print_r($response);
+        // echo "returning";
+        // return;
+        $srchValue=$queryArray["content"];
         $ch = curl_init();
         $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-        //echo $testURl;
-        // set url
         curl_setopt($ch, CURLOPT_URL, $testURl);
-        //return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // $output contains the output string
         $output = curl_exec($ch);
         if (curl_errno($ch)) {
             // return "{}";
@@ -116,7 +119,6 @@ class DocViewerAPI extends Controller
         }
 
         eval("\$output = " . $output . ";");
-        // close curl resource to free up system resources
         curl_close($ch);
         $responseArr;
         foreach ($output["response"]["docs"] as $key => $value) {
@@ -163,9 +165,7 @@ class DocViewerAPI extends Controller
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $backEndUrl);
         curl_setopt($ch, CURLOPT_TIMEOUT_MS, 500000);
-        //return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // $output contains the output string
         $output = curl_exec($ch);
         if (curl_errno($ch)) {
             return "{}";
@@ -185,4 +185,9 @@ class DocViewerAPI extends Controller
             return "{}";
         }
     }
+public function queryTest(Request $request)
+{
+    return $request;
 }
+}
+ 

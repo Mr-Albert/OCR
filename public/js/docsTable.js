@@ -19,7 +19,7 @@ function initDetail(ui) {
                 $detail = $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
 
             } else {
-                $detail = $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + responseData.content + "</div>");
+                $detail = $("<div style='overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' >" + responseData.content + "</div>");
             }
 
         },
@@ -39,7 +39,7 @@ function pqDatePicker(ui) {
         "timePicker24Hour": true,
         "autoApply": true,
         "dateLimit": {
-            "days": 90
+            "years": 100
         },
         "ranges": {
             "Today": [
@@ -54,16 +54,20 @@ function pqDatePicker(ui) {
                 moment().subtract(7, "days").format("YYYY-MM-DD") + "T00:00:00Z",
                 moment().format("YYYY-MM-DD") + "T23:59:59Z"
             ],
-            "Last 30 Days": [
-                moment().subtract(30, "days").format("YYYY-MM-DD") + "T00:00:00Z",
-                moment().format("YYYY-MM-DD") + "T23:59:59Z"
-            ],
             "This Month": [
                 moment().format("YYYY-MM-") + "01T00:00:00Z",
                 moment().format("YYYY-MM-DD") + "T23:59:59Z"
             ],
-            "Last 90 days": [
-                moment().subtract(90, "days").format("YYYY-MM-DD") + "T00:00:00Z",
+            "Last 30 Days": [
+                moment().subtract(30, "days").format("YYYY-MM-DD") + "T00:00:00Z",
+                moment().format("YYYY-MM-DD") + "T23:59:59Z"
+            ],
+            "Last 180 days": [
+                moment().subtract(180, "days").format("YYYY-MM-DD") + "T00:00:00Z",
+                moment().format("YYYY-MM-DD") + "T23:59:59Z"
+            ],
+            "This year": [
+                moment().format("YYYY-") + "01-01T00:00:00Z",
                 moment().format("YYYY-MM-DD") + "T23:59:59Z"
             ]
         },
@@ -75,7 +79,7 @@ function pqDatePicker(ui) {
         "showCustomRangeLabel": false,
         "alwaysShowCalendars": true,
         "parentEl": ".panel .panel-primary",
-        "startDate": moment().format("YYYY-MM-DD") + "T00:00:00Z",
+        "startDate": "1950-01-01T00:00:00Z",
         "endDate": moment().format("YYYY-MM-DDTHH:mm:ss") + "Z",
         "opens": "left",
         "drops": "down"
@@ -130,7 +134,7 @@ background: rgba(255, 0, 0, 0.4);'></div>\
 
     }
 }
-var globaldescription="*",globalTitle="*",globalSearch="*";
+var globaldescription="*",globalTitle="*",globalSearch="*",globalAuthor="*",globalFromDate="*",globalToDate="*";
 $(function () {
 
     var types = {
@@ -154,42 +158,45 @@ $(function () {
             dataIndx: "title",
             filter: {
                 type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*" }}]
+                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*"; }}]
             }
         },
         {
             minWidth: '30%',
-            width: '80%',
+            width: '60%',
             title: "Describtion",
             dataIndx: "content",
             filter: {
                 type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*" }}]
+                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
             }
         },
 
-        // {
-        //     minWidth: '10%',
-        //     title: "Created_on",
-        //     dataIndx: "date",
-        //     filter: {
-        //         type: 'textbox',
-        //         init: pqDatePicker,
-        //         listeners: ['change']
-        //     }
-        // },
-        // {
-        //     minWidth: '10%',
-        //     title: "Created by",
-        //     dataIndx: "author",
-        //     filter: {
-        //         type: 'textbox',
-        //         listeners: ['change']
-        //     }
-        // },
         {
             minWidth: '10%',
-            maxWidth: '15%',
+            title: "Created_on",
+            dataIndx: "date",
+            filter: {
+                type: 'textbox',
+                init: pqDatePicker,
+                listeners: ['change',{'change':function(evt, ui){
+                    if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
+                    if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
+                }}]
+            }
+        },
+        {
+            minWidth: '10%',
+            title: "Created by",
+            dataIndx: "author",
+            filter: {
+                type: 'textbox',
+                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
+            }
+        },
+        {
+            minWidth: '10%',
+            maxWidth: '10%',
             title: "File",
             dataIndx: "id",
             render: function (ui) {
@@ -237,7 +244,7 @@ $(function () {
             mode: "AND",
             header: true
         },
-        title: '<textarea id="seachTextArea" rows="3" cols="100" style="color:black">test</textarea>\
+        title: '<textarea id="seachTextArea" rows="2" cols="100" style="color:black">test</textarea>\
         <button id="searchButton" style="color:black;" >Search</button>\
         <form style="  float: right; " action="/upload" method="post">\
         Files:<br>\
@@ -303,8 +310,10 @@ $(function () {
         }
     });
     $("#searchButton").click(function(){ 
-        var pq_filter = '{"mode":"AND","data":[{"dataIndx":"title","value":globalTitle,"dataType":"string","cbFn":""},\
-        {"dataIndx":"content","value":globaldescription,"dataType":"string","cbFn":""}]}';
+        var pq_filter = 'pq_filter: {"mode":"AND","data":[{"dataIndx":"title","value":'+globalTitle+',"dataType":"string"\
+        ,"cbFn":""},{"dataIndx":"content","value":"'+globaldescription+'","dataType":"string","cbFn":""}\
+        ,{"dataIndx":"date","value":"'+globalFromDate+' TO '+globalToDate+'","dataType":"string","cbFn":""}\
+        ,{"dataIndx":"author","value":"'+globalAuthor+'","dataType":"string","cbFn":""}]}';
 
         $.ajax({
             url: "/DOCSAPI",
