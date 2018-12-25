@@ -45,9 +45,6 @@
 <script type="text/javascript" src="js/test.js"></script>
 @endif
 
-@if ($request->segment(1) =='event_type')
-<script type='text/javascript' src='js/eventTypeTable.js'></script>
-@endif
 
 
 <script>

@@ -49,6 +49,12 @@
         overflow: auto !important;
         max-height:400px;
     }
+    em
+    {
+        font-style: italic;
+        background-color: yellow;
+
+    }
     </style>
 <script src="{{asset('js/jQuery-File-Upload-master/js/vendor/jquery.ui.widget.js')}}"></script>
 <script src="{{asset('js/jQuery-File-Upload-master/js/jquery.iframe-transport.js')}}"></script>
@@ -58,6 +64,10 @@
 <script src="{{ asset('js/uploader-master/src/js/jquery.dm-uploader.js')}}"></script>
 {{-- <script type="text/javascript" src="{{ asset('js/grid-2.4.1/pqgrid.min.js')}}" ></script>    --}}
 <script src="{{asset('js/docsTable.js')}}"></script>
+
+<script type="text/javascript" src="{{ url('adminlte/plugins/daterangepicker') }}/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ url('adminlte/plugins/daterangepicker') }}/daterangepicker.css" />
+
 
 
 @endif
