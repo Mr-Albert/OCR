@@ -110,7 +110,7 @@ class DocViewerAPI extends Controller
 		////////
 		
         $ch = curl_init();
-        $testURl = config('app.engine')["url"] . ":" . config('app.engine')["port"] ."/prepare?sentence=".urlencode($srchValue); 
+        $testURl = "http://".config('app.engine')["url"] . ":" . config('app.engine')["port"] ."/prepare?sentence=".urlencode($srchValue); 
 		curl_setopt($ch, CURLOPT_URL, $testURl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
