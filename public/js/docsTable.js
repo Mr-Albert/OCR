@@ -3,7 +3,6 @@ function initDetail(ui) {
     var content;
     var responseDataM;
     var $detail;
-    var searchValue = $("[name=content]").val();
 
     $.ajax({
         url: "/DOCSAPI/details",
@@ -11,7 +10,7 @@ function initDetail(ui) {
         async: false,
         data: {
             id: rowData.id,
-            srch: searchValue
+            srch: globalSearch
         },
         success: function (responseData) {
             responseDataM = responseData;
@@ -162,8 +161,7 @@ $(function () {
             }
         },
         {
-            minWidth: '30%',
-            width: '60%',
+            minWidth: '50%',
             title: "Describtion",
             dataIndx: "content",
             filter: {
@@ -196,7 +194,6 @@ $(function () {
         },
         {
             minWidth: '10%',
-            maxWidth: '10%',
             title: "File",
             dataIndx: "id",
             render: function (ui) {
@@ -314,18 +311,20 @@ $(function () {
         ,"cbFn":""},{"dataIndx":"content","value":"'+globaldescription+'","dataType":"string","cbFn":""}\
         ,{"dataIndx":"date","value":"'+globalFromDate+' TO '+globalToDate+'","dataType":"string","cbFn":""}\
         ,{"dataIndx":"author","value":"'+globalAuthor+'","dataType":"string","cbFn":""}]}';
-
+		globalSearch=$("#seachTextArea").val();
+		if(globalSearch=="") globalSearch="*";
         $.ajax({
             url: "/DOCSAPI",
             method: "GET",
             async: false,
             data: {
                 pq_filter: pq_filter,
-                srch: $("#seachTextArea").val()
+                srch: globalSearch
             },
             success: function (responseData) {
                 console.log(responseData);
                 $( "#table" ).pqGrid( "option", "dataModel.data", responseData );
+                $( "#table" ).pqGrid( "refreshView" );
             },
     
         });

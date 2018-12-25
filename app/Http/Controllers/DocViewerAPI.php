@@ -37,7 +37,6 @@ class DocViewerAPI extends Controller
                 // return "{}";
                 return array("type" => "pdf", "content" => $id);
             }
-            $output = array();
             eval("\$output = " . $output . ";");
             // close curl resource to free up system resources
             curl_close($ch);
@@ -50,8 +49,8 @@ class DocViewerAPI extends Controller
         } else {
             //gets details hocr from solr
             $ch = curl_init();
-            $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=(id:" . urlencode($id) . urlencode(" AND hocr:" . $srch) . (")&fl=highlighting&hl.fl=hocr&hl=on&hl.fragsize=0&wt=php");
-            curl_setopt($ch, CURLOPT_URL, $testURl);
+            $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=(id:" . urlencode($id) . urlencode(" AND hocr:" . $srch) . (")&fl=highlighting&hl.fl=hocr&hl=on&hl.fragsize=0&wt=php");            
+			curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             // $output contains the output string
@@ -108,9 +107,35 @@ class DocViewerAPI extends Controller
         // echo "returning";
         // return;
         $srchValue=$queryArray["content"];
+		////////
+		
+        $ch = curl_init();
+        $testURl = config('app.engine')["url"] . ":" . config('app.engine')["port"] ."/prepare?sentence=".urlencode($srchValue); 
+		curl_setopt($ch, CURLOPT_URL, $testURl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        if (curl_errno($ch)) {
+            // return "{}";
+           // return "error";
+        }
+		else 
+		{
+			//print_r((json_decode($output)));
+			foreach(json_decode($output)->sentenceList as $key=>$word)
+			{
+				$srchValue.= " OR ".$word;
+			}
+			$srchValue="( ".$srchValue." )";
+			//return $testURl;
+		}
+        curl_close($ch);
+		//print_r((($srchValue)));
+		//////////
         $ch = curl_init();
         $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-        curl_setopt($ch, CURLOPT_URL, $testURl);
+        //echo $testURl;
+		//return;
+		curl_setopt($ch, CURLOPT_URL, $testURl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         if (curl_errno($ch)) {
