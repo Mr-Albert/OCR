@@ -26,7 +26,7 @@ class DocViewerAPI extends Controller
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
-            $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=id:" . urlencode($id) . ("&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+            $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=id:" . urlencode($id) . ("&fl=highlighting&hl.fl=hocr&hl=on&hl.fragsize=0&wt=php");
             curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -40,12 +40,10 @@ class DocViewerAPI extends Controller
             eval("\$output = " . $output . ";");
             // close curl resource to free up system resources
             curl_close($ch);
-            $responseArr;
-            foreach ($output["response"]["docs"] as $key => $value) {
-                $value["content"] = $output["highlighting"][$value["id"]]["content"][0];
-                $responseArr[] = ($value);
+            $responseData = array("type" => "pdf", "hocr" => $output['highlighting'][$id]['hocr']);
+            return $responseData;
                 // echo"<br>";
-            }
+            
         } else {
             //gets details hocr from solr
             $ch = curl_init();
