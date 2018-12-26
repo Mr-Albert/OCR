@@ -18,7 +18,7 @@ function initDetail(ui) {
                 $detail = $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
 
             } else {
-                $detail = $("<div style='overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' >" + responseData.content + "</div>");
+                $detail = $("<div style='text-align: right; white-space: pre-line; overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' >" + responseData.content + "</div>");
             }
 
         },
@@ -93,7 +93,7 @@ function highlightAdapter(imageSrc, highlights) {
         currentDiv[4] = parseInt(currentDiv[4]) - parseInt(currentDiv[2]);
         currentDiv[3] = parseInt(currentDiv[3]) - parseInt(currentDiv[1]);
         // console.log(currentDiv);
-        highlightDivs = highlightDivs + (" <div id='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(255, 0, 0, 0.2);'></div>");
+        highlightDivs = highlightDivs + (" <div id='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(238, 238, 0, 0.5);'></div>");
         console.log(highlightDivs);
 
 
@@ -143,7 +143,8 @@ $(function () {
         jpeg: "image",
         pdf: "pdf"
     };
-    var colM = [{
+    var colM = [
+    {
             title: "",
             minWidth: 27,
             maxWidth: 27,
@@ -151,46 +152,46 @@ $(function () {
             resizable: false,
             editable: false,
         },
-        {
-            minWidth: '10%',
-            title: "title",
-            dataIndx: "title",
-            filter: {
-                type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*"; }}]
-            }
-        },
+        // {
+        //     minWidth: '10%',
+        //     title: "title",
+        //     dataIndx: "title",
+        //     filter: {
+        //         type: 'textbox',
+        //         listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*"; }}]
+        //     }
+        // },
         {
             minWidth: '50%',
             title: "Describtion",
-            dataIndx: "fileDescribtion",
-            filter: {
-                type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
-            }
+            dataIndx: "file_description",
+            // filter: {
+            //     type: 'textbox',
+            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
+            // }
         },
 
         {
             minWidth: '10%',
             title: "Created_on",
-            dataIndx: "date",
-            filter: {
-                type: 'textbox',
-                init: pqDatePicker,
-                listeners: ['change',{'change':function(evt, ui){
-                    if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
-                    if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
-                }}]
-            }
+            dataIndx: "created_on",
+            // filter: {
+            //     type: 'textbox',
+            //     init: pqDatePicker,
+            //     listeners: ['change',{'change':function(evt, ui){
+            //         if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
+            //         if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
+            //     }}]
+            // }
         },
         {
             minWidth: '10%',
             title: "Created by",
-            dataIndx: "author",
-            filter: {
-                type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
-            }
+            dataIndx: "created_by",
+            // filter: {
+            //     type: 'textbox',
+            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
+            // }
         },
         {
             minWidth: '10%',
@@ -199,8 +200,8 @@ $(function () {
             render: function (ui) {
                 // console.log(ui);
                 var id = ui.rowData.id;
-                var iconType = types[(id.substr(id.length - 3))] + ".png";
-                return "<div id='" + id + "' ><a href='DOCSAPI/down?fileName=" + id + "'  target='_blank'><img style='margin-left:44%;width:12%;height:12%;' src = '/" + iconType + "'' /></a></div>";
+                var iconType = types[(id.substr(id.length - 3)).toLowerCase()] + ".png";
+                return "<div id='" + id + "' ><a href='DOCSAPI/down?fileName=" + id + "'  target='_blank'><img style='margin-left:44%;width:12%;height:12%;' src = '/" + iconType.toLowerCase() + "'' /></a></div>";
             }
 
         }
@@ -241,7 +242,7 @@ $(function () {
             mode: "AND",
             header: true
         },
-        title: '<textarea id="seachTextArea" rows="2" cols="100" style="color:black">test</textarea>\
+        title: '<textarea id="seachTextArea" rows="2" cols="100" style="color:black"></textarea>\
         <button id="searchButton" style="color:black;" >Search</button>\
         <form style="  float: right; " action="/upload" method="post">\
         Files:<br>\
@@ -316,7 +317,6 @@ $(function () {
         $.ajax({
             url: "/DOCSAPI",
             method: "GET",
-            async: false,
             data: {
                 pq_filter: pq_filter,
                 srch: globalSearch
