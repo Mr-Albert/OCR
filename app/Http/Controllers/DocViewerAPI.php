@@ -39,10 +39,13 @@ class DocViewerAPI extends Controller
         else 
         {
             //print_r((json_decode($output)));
-            $srch.="~0.7 ";
+            $srch.="~0.8 ";
             foreach(json_decode($output)->sentenceList as $key=>$word)
             {
-                $srch.= " OR ".$word."~0.7 ";
+                $srch.= " OR ".$word."~0.8 ";
+            }
+            if ($request->input('srch') != '') {
+                $srch.= " OR ".$request->input('srch');
             }
             $srch="( ".$srch." )";
             //return $testURl;
@@ -151,12 +154,15 @@ class DocViewerAPI extends Controller
         }
 		else 
 		{
-            $srchValue.="~0.7 ";
+            $srchValue.="~0.8 ";
 			//print_r((json_decode($output)));
 			foreach(json_decode($output)->sentenceList as $key=>$word)
 			{
-				$srchValue.= " OR ".$word."~0.7 ";
+				$srchValue.= " OR ".$word."~0.8 ";
 			}
+            if ($request->input("srch") != '') {
+               $srchValue.= " OR ".$request->input("srch");
+            }
 			$srchValue="( ".$srchValue." )";
 			//return $testURl;
 		}
@@ -165,8 +171,8 @@ class DocViewerAPI extends Controller
 		//////////
         $ch = curl_init();
         $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,created_by,created_on,file_description,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-        //echo $testURl;
-		//return;
+  //       echo $testURl;
+		// return;
 	  // echo $testURl;
    //      return;
     	curl_setopt($ch, CURLOPT_URL, $testURl);
