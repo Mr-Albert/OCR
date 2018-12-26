@@ -15,10 +15,10 @@ function initDetail(ui) {
         success: function (responseData) {
             responseDataM = responseData;
             if (responseData.type == "image") {
-                $detail = $("<div style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
+                $detail = $("<div id='grand' style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
 
             } else {
-                $detail = $("<div style='text-align: right; white-space: pre-line; overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' >" + responseData.content + "</div>");
+                $detail = $("<div id='grand' style='text-align: right; white-space: pre-line; overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' > " + responseData.content + "</div>");
             }
 
         },
@@ -135,7 +135,15 @@ background: rgba(255, 0, 0, 0.4);'></div>\
 }
 var globaldescription="*",globalTitle="*",globalSearch="*",globalAuthor="*",globalFromDate="*",globalToDate="*";
 $(function () {
-
+    $("#scroller").click(function(){
+        alert("click");
+        $('#grand').animate({
+            scrollTop: $("#highlight").offset().top - $("#grand").height()/2-$("#highlight").height()/2,
+            scrollLeft: $("#highlight").offset().left - $("#grand").width()/2-$("#highlight").height()/2
+         }, 1000);
+         
+    
+    });
     var types = {
         png: "image",
         tif: "image",

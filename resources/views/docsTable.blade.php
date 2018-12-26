@@ -5,7 +5,8 @@
 <meta name="_token" content="{{ csrf_token() }}">
         <div class="col-md-12">
             <div class="panel panel-primary">
-                <div class="panel-heading">Search</div>
+                <div id="scroller" class="panel-heading">Search</div>
+                
                    <div id="table"></div>
                    <div id="dialog" title="Basic dialog" style="display: none;">
                         <p>File Description</p>

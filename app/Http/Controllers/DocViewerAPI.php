@@ -60,7 +60,7 @@ class DocViewerAPI extends Controller
             $output = curl_exec($ch);	
 		if (curl_errno($ch)) {
                 // return "{}";
-                return array("type" => "pdf", "content" => $id);
+                return array("type" => "pdf", "content" => $id,"id"=>"test.jpg");
             }
             // print_r($output);
             // return;
@@ -88,7 +88,7 @@ class DocViewerAPI extends Controller
 
             if (curl_errno($ch)) {
                 // return "{}";
-                return array("type" => "image", "content" => $id);
+                return array("type" => "image", "content" => $id,"id"=>"test.jpg","hocr"=>["5 500 500 1000 1000"]);
             }
             eval("\$output = " . $output . ";");
             // close curl resource to free up system resources
@@ -176,7 +176,7 @@ class DocViewerAPI extends Controller
         //return;
         if (curl_errno($ch)) {
             // return "{}";
-            return array(array("id" => "pdf1.pdf"), array("id" => "img1.png"), array("id" => "img2.jpg"),
+            return array(array("id" => "pdf1.pdf"), array("id" => "test.jpg"), array("id" => "test.jpg"),
                 array("id" => "pdf2.pdf"));
         }
 
