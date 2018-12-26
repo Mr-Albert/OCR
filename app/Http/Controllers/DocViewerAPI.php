@@ -130,7 +130,7 @@ class DocViewerAPI extends Controller
 		//print_r((($srchValue)));
 		//////////
         $ch = curl_init();
-        $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,author,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+        $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,created_by,created_on,description,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
         //echo $testURl;
 		//return;
 		curl_setopt($ch, CURLOPT_URL, $testURl);
@@ -147,6 +147,7 @@ class DocViewerAPI extends Controller
         $responseArr;
         foreach ($output["response"]["docs"] as $key => $value) {
             $value["content"] = $output["highlighting"][$value["id"]]["content"][0];
+            // $value["content"]=
             $responseArr[] = ($value);
         }
         return ($responseArr);
