@@ -93,7 +93,7 @@ function highlightAdapter(imageSrc, highlights) {
         currentDiv[4] = parseInt(currentDiv[4]) - parseInt(currentDiv[2]);
         currentDiv[3] = parseInt(currentDiv[3]) - parseInt(currentDiv[1]);
         // console.log(currentDiv);
-        highlightDivs = highlightDivs + (" <div id='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(255, 0, 0, 0.2);'></div>");
+        highlightDivs = highlightDivs + (" <div id='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(238, 238, 0, 0.5);'></div>");
         console.log(highlightDivs);
 
 
@@ -143,7 +143,8 @@ $(function () {
         jpeg: "image",
         pdf: "pdf"
     };
-    var colM = [{
+    var colM = [
+    {
             title: "",
             minWidth: 27,
             maxWidth: 27,
@@ -151,46 +152,46 @@ $(function () {
             resizable: false,
             editable: false,
         },
-        {
-            minWidth: '10%',
-            title: "title",
-            dataIndx: "title",
-            filter: {
-                type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*"; }}]
-            }
-        },
+        // {
+        //     minWidth: '10%',
+        //     title: "title",
+        //     dataIndx: "title",
+        //     filter: {
+        //         type: 'textbox',
+        //         listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*"; }}]
+        //     }
+        // },
         {
             minWidth: '50%',
             title: "Describtion",
             dataIndx: "file_description",
-            filter: {
-                type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
-            }
+            // filter: {
+            //     type: 'textbox',
+            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
+            // }
         },
 
         {
             minWidth: '10%',
             title: "Created_on",
             dataIndx: "created_on",
-            filter: {
-                type: 'textbox',
-                init: pqDatePicker,
-                listeners: ['change',{'change':function(evt, ui){
-                    if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
-                    if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
-                }}]
-            }
+            // filter: {
+            //     type: 'textbox',
+            //     init: pqDatePicker,
+            //     listeners: ['change',{'change':function(evt, ui){
+            //         if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
+            //         if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
+            //     }}]
+            // }
         },
         {
             minWidth: '10%',
             title: "Created by",
             dataIndx: "created_by",
-            filter: {
-                type: 'textbox',
-                listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
-            }
+            // filter: {
+            //     type: 'textbox',
+            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
+            // }
         },
         {
             minWidth: '10%',

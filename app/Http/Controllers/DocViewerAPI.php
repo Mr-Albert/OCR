@@ -23,6 +23,32 @@ class DocViewerAPI extends Controller
         $srch = $request->input('srch');
         if($srch=="")
             $srch="*";
+        else
+        {
+
+        $ch = curl_init();
+        $testURl = "http://".config('app.engine')["url"] . ":" . config('app.engine')["port"] ."/prepare?sentence=".urlencode($srch); 
+
+        curl_setopt($ch, CURLOPT_URL, $testURl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        if (curl_errno($ch)) {
+            // return "{}";
+           // return "error";
+        }
+        else 
+        {
+            //print_r((json_decode($output)));
+            $srch.="~0.7 ";
+            foreach(json_decode($output)->sentenceList as $key=>$word)
+            {
+                $srch.= " OR ".$word."~0.7 ";
+            }
+            $srch="( ".$srch." )";
+            //return $testURl;
+        }
+        curl_close($ch);
+        }
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
@@ -31,8 +57,7 @@ class DocViewerAPI extends Controller
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             // $output contains the output string
-            $output = curl_exec($ch);
-        			
+            $output = curl_exec($ch);	
 		if (curl_errno($ch)) {
                 // return "{}";
                 return array("type" => "pdf", "content" => $id);
@@ -51,11 +76,15 @@ class DocViewerAPI extends Controller
             //gets details hocr from solr
             $ch = curl_init();
             $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=(id:" . urlencode($id) . urlencode(" AND hocr:" . $srch) . (")&fl=highlighting&hl.fl=hocr&hl=on&hl.fragsize=0&wt=php");            
-			curl_setopt($ch, CURLOPT_URL, $testURl);
+		// echo $testURl;
+  //       return;
+        	curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             // $output contains the output string
             $output = curl_exec($ch);
+            // print_r($testURl);
+            // return;
 
             if (curl_errno($ch)) {
                 // return "{}";
@@ -115,16 +144,18 @@ class DocViewerAPI extends Controller
 		curl_setopt($ch, CURLOPT_URL, $testURl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
+
         if (curl_errno($ch)) {
             // return "{}";
            // return "error";
         }
 		else 
 		{
+            $srchValue.="~0.7 ";
 			//print_r((json_decode($output)));
 			foreach(json_decode($output)->sentenceList as $key=>$word)
 			{
-				$srchValue.= " OR ".$word;
+				$srchValue.= " OR ".$word."~0.7 ";
 			}
 			$srchValue="( ".$srchValue." )";
 			//return $testURl;
@@ -136,7 +167,9 @@ class DocViewerAPI extends Controller
         $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue) . ("&fl=id,last_modified,title,created_by,created_on,file_description,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
         //echo $testURl;
 		//return;
-		curl_setopt($ch, CURLOPT_URL, $testURl);
+	  // echo $testURl;
+   //      return;
+    	curl_setopt($ch, CURLOPT_URL, $testURl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         //print_r($output);
