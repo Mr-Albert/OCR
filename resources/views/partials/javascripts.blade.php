@@ -59,13 +59,13 @@
 
 .filters-container {
   display: grid;
-  grid-template-columns: repeat(20, auto);
+  grid-template-columns: repeat(6, 85px) repeat(14, auto);
   grid-gap: 10px;
   padding: 10px;
 }
 
 
-#searchButton {
+.filters-container #searchButton {
     margin-left: -32px;
     height: 25px;
     width: 25px;
@@ -75,31 +75,31 @@
   z-index:-1;
     -webkit-appearance: none;
 }
-#searchButton:focus {
+.filters-container #searchButton:focus {
   outline: none;
 }
 
 
-#seachTextArea {
+.filters-container input {
 	outline: none;
     overflow: auto;
 
 
 }
-#seachTextArea {
+.filters-container input {
 	-webkit-appearance: textfield;
 	-webkit-box-sizing: content-box;
 	font-family: inherit;
 	font-size: 100%;
-  overflow:hidden;
+    overflow:hidden;
 }
-#seachTextArea::-webkit-search-decoration,
-#seachTextArea::-webkit-search-cancel-button {
+.filters-container input::-webkit-search-decoration,
+.filters-container input::-webkit-search-cancel-button {
 	display: none; 
 }
 
-
-#seachTextArea {
+.filters-container input
+ {
 	border: solid 1px #ccc;
 	padding: 5px 30px 5px 15px;
 	width: 95px;
@@ -107,12 +107,14 @@
 	-webkit-border-radius: 4em;
 	-moz-border-radius: 4em;
 	border-radius: 4em;
-	
+ }
+ .filters-container #seachTextArea
+ {	
 	-webkit-transition: all 1.5s;
 	-moz-transition: all 1.5s;
 	transition: all 1.5s;
 }
-#seachTextArea:focus {
+.filters-container #seachTextArea:focus {
 	width: 400px;
 	background-color: #fff;
 	border-color: #66CC75;
@@ -126,10 +128,10 @@
 }
 
 
-#seachTextArea:-moz-placeholder {
+.filters-container input:-moz-placeholder {
 	color: #999;
 }
-#seachTextArea::-webkit-input-placeholder {
+.filters-container input::-webkit-input-placeholder {
 	color: #999;
 }
 

@@ -30,7 +30,7 @@ function initDetail(ui) {
 
 function pqDatePicker(ui) {
     var $this = $(this);
-    $this.daterangepicker({
+    $(ui).daterangepicker({
         "showCustomRangeLabel": false,
         "showDropdowns": true,
         "showWeekNumbers": true,
@@ -144,6 +144,7 @@ $(function () {
          
     
     });
+    pqDatePicker("#DateSearch");
     var types = {
         png: "image",
         tif: "image",
@@ -169,15 +170,6 @@ $(function () {
         //         listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalTitle=ui.value; else globalTitle="*"; }}]
         //     }
         // },
-        {
-            minWidth: '50%',
-            title: "Describtion",
-            dataIndx: "file_description",
-            // filter: {
-            //     type: 'textbox',
-            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
-            // }
-        },
 
         {
             minWidth: '10%',
@@ -212,6 +204,15 @@ $(function () {
                 return "<div id='" + id + "' ><a href='DOCSAPI/down?fileName=" + id + "'  target='_blank'><img style='margin-left:44%;width:12%;height:12%;' src = '/" + iconType.toLowerCase() + "'' /></a></div>";
             }
 
+        },
+        {
+            minWidth: '30%',
+            title: "Describtion",
+            dataIndx: "file_description",
+            // filter: {
+            //     type: 'textbox',
+            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
+            // }
         }
     ];
     //define dataModel
