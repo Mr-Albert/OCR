@@ -250,8 +250,7 @@ $(function () {
             mode: "AND",
             header: true
         },
-        title: '<textarea id="seachTextArea" rows="2" cols="100" style="color:black"></textarea>\
-        <button id="searchButton" style="color:black;" >Search</button>\
+        title: '\
         <form style="  float: right; " action="/upload" method="post">\
         Files:<br>\
         <input type="hidden" name="_token" value="' + $('meta[name="_token"]').attr('content') + '" />\

@@ -55,6 +55,85 @@
         background-color: yellow;
 
     }
+    
+
+.filters-container {
+  display: grid;
+  grid-template-columns: repeat(20, auto);
+  grid-gap: 10px;
+  padding: 10px;
+}
+
+
+#searchButton {
+    margin-left: -32px;
+    height: 25px;
+    width: 25px;
+    background: transparent url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 5px center;
+    color: black;
+    border: 0;
+  z-index:-1;
+    -webkit-appearance: none;
+}
+#searchButton:focus {
+  outline: none;
+}
+
+
+#seachTextArea {
+	outline: none;
+    overflow: auto;
+
+
+}
+#seachTextArea {
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	font-family: inherit;
+	font-size: 100%;
+  overflow:hidden;
+}
+#seachTextArea::-webkit-search-decoration,
+#seachTextArea::-webkit-search-cancel-button {
+	display: none; 
+}
+
+
+#seachTextArea {
+	border: solid 1px #ccc;
+	padding: 5px 30px 5px 15px;
+	width: 95px;
+	
+	-webkit-border-radius: 4em;
+	-moz-border-radius: 4em;
+	border-radius: 4em;
+	
+	-webkit-transition: all 1.5s;
+	-moz-transition: all 1.5s;
+	transition: all 1.5s;
+}
+#seachTextArea:focus {
+	width: 400px;
+	background-color: #fff;
+	border-color: #66CC75;
+	
+	-webkit-box-shadow: 0 0 5px blue;
+	-moz-box-shadow: 0 0 5px blue;
+	box-shadow: 0 0 5px blue;
+-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	transition: all .5s;
+}
+
+
+#seachTextArea:-moz-placeholder {
+	color: #999;
+}
+#seachTextArea::-webkit-input-placeholder {
+	color: #999;
+}
+
+
     </style>
 <script src="{{asset('js/jQuery-File-Upload-master/js/vendor/jquery.ui.widget.js')}}"></script>
 <script src="{{asset('js/jQuery-File-Upload-master/js/jquery.iframe-transport.js')}}"></script>
