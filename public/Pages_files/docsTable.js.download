@@ -1,12 +1,11 @@
 //globals
 var globaldescription = "*",
-    globalClass = "*",
+    globalTitle = "*",
     globalSearch = "*",
     globalAuthor = "*",
     globalFromDate = "*",
     globalToDate = "*";
-var globalChartData="";
-var maxR=0,minR=Infinity;
+
 //fucntions
 function initDetail(ui) {
     var rowData = ui.rowData;
@@ -25,7 +24,7 @@ function initDetail(ui) {
         success: function (responseData) {
             responseDataM = responseData;
             if (responseData.type == "image") {
-                $detail = $("<div id='grand-'"+rowData.id+" style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'><div style='position:absolute'><br><button class='highlightGetter' onclick='highlightGetter(\"next\",\"grand-"+rowData.id+"\")' id='nextHighlight'>NEXT</button><button class='highlightGetter(\"prev\",\"grand-"+rowData.id+"\")' onclick='highlightGetter()' id='prevHighlight'>PREV</button></div>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
+                $detail = $("<div id='grand' style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
 
             } else {
                 $detail = $("<div id='grand' style='text-align: right; white-space: pre-line; overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' > " + responseData.content + "</div>");
@@ -104,7 +103,7 @@ function highlightAdapter(imageSrc, highlights) {
         currentDiv[3] = parseInt(currentDiv[3]) - parseInt(currentDiv[1]);
         // console.log(currentDiv);
         highlightDivs = highlightDivs + (" <div id='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(238, 238, 0, 0.5);'></div>");
-        // console.log(highlightDivs);
+        console.log(highlightDivs);
 
 
     }
@@ -147,10 +146,9 @@ background: rgba(255, 0, 0, 0.4);'></div>\
 //////////////
 
 function buildChart(id) {
-    d3.selectAll('#' + id+" > *").remove();
-    var colours = ["rgba(255,100,100,0.5)", "rgba(100,255,100,0.5)", "rgba(100,100,255,0.5)"];
-    // var diameter = $('#' + id).width();
-    var diameter=Math.min($(window).height(),$(window).width());
+    var colours = ["red", "blue", "cyan"];
+    var diameter = $('#' + id).width();
+
 
     var format = d3.format(",d"),
         dataSource = 0;
@@ -169,7 +167,7 @@ function buildChart(id) {
         .attr("height", diameter);
 
 
-    var data = globalChartData;
+    var data = getData();
 
     var vis = svg.datum(data).selectAll(".node")
         .data(pack.nodes)
@@ -210,30 +208,10 @@ function buildChart(id) {
             return d.y;
         })
         .attr("r", function (d) {
-            if(d.r==NaN||d.r==undefined)
-                return 0;
-            // console.log("radius before");
-            // console.log(maxR);
-            // console.log(d.r);
-            maxR=Math.max(maxR,d.r);
-            minR=Math.min(minR,d.r);
-
-            // console.log("///////");
             return d.r * 0.1;
-        })
-        .on("click", function(d) {
-            // console.log("node Data");
-            // console.log(d);
-        })
-        .transition()
-        .duration(function(d){ 
-            //  console.log(250* ((maxR-minR)/d.r)  );                       
-            return Math.min(250 * ((maxR-minR)/d.r),10000) ;}
-            )
-        .attr("r", function (d) {
-            // console.log("radius");
-            // console.log(d.r);
-            return d.r;
+        }).transition()
+        .duration(2500).attr("r", function (d) {
+            return d.r
         });
     // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" });
 
@@ -1182,62 +1160,9 @@ function getData() {
 
     };
 };
-
-function searchHandler()
-{
-    globalSearch = $("#seachTextArea").val();
-    if (globalSearch == "") globalSearch = "*";
-    globaldescription=($("#describtionSearch").val().trim());
-    (globaldescription==""||globaldescription==null)? globaldescription="*":globaldescription=globaldescription;
-    globalAuthor=($("#authorSearch").val().trim());
-    (globalAuthor==""||globalAuthor==null)? globalAuthor="*":globalAuthor=globalAuthor;
-    globalClass=($("#classSearch").val().trim());
-    (globalClass==""||globalClass==null)? globalClass="*":globalClass=globalClass;
-    globalFromDate=($("#DateSearch").val().split("TO")[0].trim());
-    (globalFromDate==""||globalFromDate==null)? globalFromDate="*":globalFromDate=globalFromDate;
-    globalToDate=($("#DateSearch").val().split("TO")[1].trim());
-    (globalToDate==""||globalToDate==null)? globalToDate="*":globalToDate=globalToDate;
-
-    var pq_filter = 'pq_filter: {"mode":"AND","data":[{"dataIndx":"class","value":' + globalClass + ',"dataType":"string"\
-,"cbFn":""},{"dataIndx":"content","value":"' + globaldescription + '","dataType":"string","cbFn":""}\
-,{"dataIndx":"date","value":"' + globalFromDate + ' TO ' + globalToDate + '","dataType":"string","cbFn":""}\
-,{"dataIndx":"author","value":"' + globalAuthor + '","dataType":"string","cbFn":""}]}';
-
-    $.ajax({
-        url: "/DOCSAPI",
-        method: "GET",
-        data: {
-            pq_filter: pq_filter,
-            srch: globalSearch
-        },
-        success: function (responseData) {
-            // console.log(responseData);
-            //fill table
-            $("#table").pqGrid("option", "dataModel.data", responseData.tableData);
-            $("#table").pqGrid("refreshView");
-            //fill graph here
-            globalChartData=responseData.graphData;
-            // console.log(globalChartData);
-            buildChart("chartArea");
-        },
-
-    });
-
-}
-
-function highlightGetter(buttonId,PranetID) {
-    // console.log("button");
-    // console.log(buttonId);
-    // console.log("PranetID");
-    // console.log(PranetID);
-};
-
-
 //event handlers goes here
 function eventHandlers() {
-    window.onresize = function(event) {
-        buildChart("chartArea");
-    };
+
     //change this
     $("#scroller").click(function () {
         alert("click");
@@ -1248,9 +1173,6 @@ function eventHandlers() {
 
 
     });
-    //
- 
-
     $(".filesGetter").click(
         function (event) {
             alert(event.target.id);
@@ -1264,23 +1186,33 @@ function eventHandlers() {
             });
         }
     );
-    //search handler
+
     $("#searchButton").click(function () {
-        //hadnlesearch func should be here
-        searchHandler();
-    });
-    $('#seachTextArea').on("keypress", function(e) {
-        /* ENTER PRESSED*/
-        if (e.keyCode == 13) {
-            searchHandler();
-            return false;
-        }
+        var pq_filter = 'pq_filter: {"mode":"AND","data":[{"dataIndx":"title","value":' + globalTitle + ',"dataType":"string"\
+,"cbFn":""},{"dataIndx":"content","value":"' + globaldescription + '","dataType":"string","cbFn":""}\
+,{"dataIndx":"date","value":"' + globalFromDate + ' TO ' + globalToDate + '","dataType":"string","cbFn":""}\
+,{"dataIndx":"author","value":"' + globalAuthor + '","dataType":"string","cbFn":""}]}';
+        globalSearch = $("#seachTextArea").val();
+        if (globalSearch == "") globalSearch = "*";
+        $.ajax({
+            url: "/DOCSAPI",
+            method: "GET",
+            data: {
+                pq_filter: pq_filter,
+                srch: globalSearch
+            },
+            success: function (responseData) {
+                console.log(responseData);
+                $("#table").pqGrid("option", "dataModel.data", responseData);
+                $("#table").pqGrid("refreshView");
+            },
+
+        });
     });
 }
 //inits DOM goes here
 
 function DOMInits() {
-    $( "#tabs" ).tabs();
 
     //date picker init
     pqDatePicker("#DateSearch");
@@ -1316,7 +1248,7 @@ function DOMInits() {
 
         },
         done: function (e, data) {
-            // console.log("finished");
+            console.log("finished");
             $('#loading').text('');
         }
     });
@@ -1393,7 +1325,7 @@ function tableInit() {
     ];
     //define dataModel
     var dataModel = {
-        location: "local",
+        location: "remote",
         sorting: "local",
         dataType: "JSON",
         method: "GET",
@@ -1444,10 +1376,8 @@ Files:<br>\
     var $grid = $("#table").pqGrid(obj);
 }
 $(function () {
-    maxR=0;
     DOMInits();
     eventHandlers();
-    
 
 
 

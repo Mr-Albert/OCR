@@ -59,11 +59,16 @@
 
 .filters-container {
   display: grid;
-  grid-template-columns: repeat(6, 85px) repeat(14, auto);
-  grid-gap: 10px;
-  padding: 10px;
+  grid-template-columns: repeat(6, 5%) repeat(14, 5%);
+  grid-gap: auto;
+  padding: auto;
 }
-
+.content-container
+{
+  display: grid;
+  grid-template-columns: repeat(20, 5%);
+;
+}
 
 .filters-container #searchButton {
     margin-left: -32px;
@@ -72,7 +77,6 @@
     background: transparent url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 5px center;
     color: black;
     border: 0;
-  z-index:-1;
     -webkit-appearance: none;
 }
 .filters-container #searchButton:focus {
@@ -80,13 +84,14 @@
 }
 
 
-.filters-container input {
+.filters-container input,#classSearch {
 	outline: none;
     overflow: auto;
+    color:black;
 
 
 }
-.filters-container input {
+.filters-container input,#classSearch {
 	-webkit-appearance: textfield;
 	-webkit-box-sizing: content-box;
 	font-family: inherit;
@@ -98,7 +103,7 @@
 	display: none; 
 }
 
-.filters-container input
+.filters-container input,#classSearch
  {
 	border: solid 1px #ccc;
 	padding: 5px 30px 5px 15px;
@@ -115,7 +120,7 @@
 	transition: all 1.5s;
 }
 .filters-container #seachTextArea:focus {
-	width: 400px;
+	width: 80%;
 	background-color: #fff;
 	border-color: #66CC75;
 	
@@ -134,7 +139,9 @@
 .filters-container input::-webkit-input-placeholder {
 	color: #999;
 }
-
+circle:hover {
+  stroke-width: 2px;
+}
 
     </style>
 <script src="{{asset('js/jQuery-File-Upload-master/js/vendor/jquery.ui.widget.js')}}"></script>
@@ -144,6 +151,9 @@
 {{-- <link rel="stylesheet" href="{{ asset('css/jquery-ui.theme.css')}}" /> --}}
 <script src="{{ asset('js/uploader-master/src/js/jquery.dm-uploader.js')}}"></script>
 {{-- <script type="text/javascript" src="{{ asset('js/grid-2.4.1/pqgrid.min.js')}}" ></script>    --}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
 <script src="{{asset('js/docsTable.js')}}"></script>
 
 <script type="text/javascript" src="{{ url('adminlte/plugins/daterangepicker') }}/daterangepicker.js"></script>
