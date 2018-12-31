@@ -79,8 +79,7 @@ class DocViewerAPI extends Controller
             //gets details hocr from solr
             $ch = curl_init();
             $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=(id:" . urlencode($id) . urlencode(" AND hocr:" . $srch) . (")&fl=highlighting&hl.fl=hocr&hl=on&hl.fragsize=0&wt=php");            
-		// echo $testURl;
-  //       return;
+  
         	curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -97,6 +96,7 @@ class DocViewerAPI extends Controller
             // close curl resource to free up system resources
             curl_close($ch);
             //print_r($output['highlighting'][$id]['hocr']);
+             return $output;
             $responseData = array("imageSrc" => "/" . $id, "type" => "image", "hocr" => $output['highlighting'][$id]['hocr']);
             return $responseData;
         }
