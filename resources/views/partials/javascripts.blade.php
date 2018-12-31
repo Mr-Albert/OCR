@@ -55,6 +55,94 @@
         background-color: yellow;
 
     }
+    
+
+.filters-container {
+  display: grid;
+  grid-template-columns: repeat(6, 5%) repeat(14, 5%);
+  grid-gap: auto;
+  padding: auto;
+}
+.content-container
+{
+  display: grid;
+  grid-template-columns: repeat(20, 5%);
+;
+}
+
+.filters-container #searchButton {
+    margin-left: -32px;
+    height: 25px;
+    width: 25px;
+    background: transparent url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 5px center;
+    color: black;
+    border: 0;
+    -webkit-appearance: none;
+}
+.filters-container #searchButton:focus {
+  outline: none;
+}
+
+
+.filters-container input,#classSearch {
+	outline: none;
+    overflow: auto;
+    color:black;
+
+
+}
+.filters-container input,#classSearch {
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	font-family: inherit;
+	font-size: 100%;
+    overflow:hidden;
+}
+.filters-container input::-webkit-search-decoration,
+.filters-container input::-webkit-search-cancel-button {
+	display: none; 
+}
+
+.filters-container input,#classSearch
+ {
+	border: solid 1px #ccc;
+	padding: 5px 30px 5px 15px;
+	width: 95px;
+	
+	-webkit-border-radius: 4em;
+	-moz-border-radius: 4em;
+	border-radius: 4em;
+ }
+ .filters-container #seachTextArea
+ {	
+	-webkit-transition: all 1.5s;
+	-moz-transition: all 1.5s;
+	transition: all 1.5s;
+}
+.filters-container #seachTextArea:focus {
+	width: 80%;
+	background-color: #fff;
+	border-color: #66CC75;
+	
+	-webkit-box-shadow: 0 0 5px blue;
+	-moz-box-shadow: 0 0 5px blue;
+	box-shadow: 0 0 5px blue;
+-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	transition: all .5s;
+}
+
+
+.filters-container input:-moz-placeholder {
+	color: #999;
+}
+.filters-container input::-webkit-input-placeholder {
+	color: #999;
+}
+circle:hover {
+  stroke-width: 2px;
+}
+
     </style>
 <script src="{{asset('js/jQuery-File-Upload-master/js/vendor/jquery.ui.widget.js')}}"></script>
 <script src="{{asset('js/jQuery-File-Upload-master/js/jquery.iframe-transport.js')}}"></script>
@@ -63,6 +151,9 @@
 {{-- <link rel="stylesheet" href="{{ asset('css/jquery-ui.theme.css')}}" /> --}}
 <script src="{{ asset('js/uploader-master/src/js/jquery.dm-uploader.js')}}"></script>
 {{-- <script type="text/javascript" src="{{ asset('js/grid-2.4.1/pqgrid.min.js')}}" ></script>    --}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
 <script src="{{asset('js/docsTable.js')}}"></script>
 
 <script type="text/javascript" src="{{ url('adminlte/plugins/daterangepicker') }}/daterangepicker.js"></script>
