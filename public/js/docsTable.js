@@ -1185,6 +1185,8 @@ function getData() {
 
 function searchHandler()
 {
+    
+    $( "#tabs" ).tabs( "option", "active", 0 );
     globalSearch = $("#seachTextArea").val();
     if (globalSearch == "") globalSearch = "*";
     globaldescription=($("#describtionSearch").val().trim());
@@ -1236,7 +1238,9 @@ function highlightGetter(buttonId,PranetID) {
 //event handlers goes here
 function eventHandlers() {
     window.onresize = function(event) {
-        buildChart("chartArea");
+        console.log($( "#tabs" ).tabs( "option", "active" ));
+        if($( "#tabs" ).tabs( "option", "active" )==1) 
+            buildChart("chartArea");
     };
     //change this
     $("#scroller").click(function () {
@@ -1276,6 +1280,15 @@ function eventHandlers() {
             return false;
         }
     });
+
+    $( "#tabs" ).on( "tabsactivate", function( event, ui ) {
+        if($( "#tabs" ).tabs( "option", "active" )==1) 
+        {
+            buildChart("chartArea");
+        }
+    } );
+
+
 }
 //inits DOM goes here
 
