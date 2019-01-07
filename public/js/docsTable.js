@@ -25,7 +25,9 @@ function initDetail(ui) {
         success: function (responseData) {
             responseDataM = responseData;
             if (responseData.type == "image") {
-                $detail = $("<div id='grand-'"+rowData.id+" style='overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'><div style='position:absolute'><br><button class='highlightGetter' onclick='highlightGetter(\"next\",\"grand-"+rowData.id+"\")' id='nextHighlight'>NEXT</button><button class='highlightGetter(\"prev\",\"grand-"+rowData.id+"\")' onclick='highlightGetter()' id='prevHighlight'>PREV</button></div>" + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
+                var tempDetail="<div id='grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase()+"' style='display:inline-block;overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'><div style='position:absolute;z-index:9000;'><br><button onclick='highlightGetter(\"prev\",\"grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase()+"\")' style='display:inline-block' class='highlightGetter ui-button-icon-primary ui-icon ui-icon-seek-prev' id='prevHighlight'>PREV</button><button class='highlightGetter ui-button-icon-primary ui-icon ui-icon-seek-next' style='display:inline-block' onclick='highlightGetter(\"next\",\"grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase()+"\")' id='nextHighlight'>NEXT</button></div>";
+                $detail = $(tempDetail
+                 + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
 
             } else {
                 $detail = $("<div id='grand' style='text-align: right; white-space: pre-line; overflow-y: scroll; height:400px;text-align: right;' id='pq-detail' tabindex='0' > " + responseData.content + "</div>");
@@ -96,14 +98,21 @@ function pqDatePicker(ui) {
 }
 
 function highlightAdapter(imageSrc, highlights) {
+    console.log("highlights\\");
+    console.log(highlights);
+    console.log("highlights/");
+
     var highlightDivs = ""
     for (var i = 0; i < highlights.length; i++) {
         // x y x2 y2
         var currentDiv = highlights[i].split(" ");
+        console.log("    a highlight\\");
+        console.log(highlights[i]);
+         console.log("    highlight/");
         currentDiv[4] = parseInt(currentDiv[4]) - parseInt(currentDiv[2]);
         currentDiv[3] = parseInt(currentDiv[3]) - parseInt(currentDiv[1]);
         // console.log(currentDiv);
-        highlightDivs = highlightDivs + (" <div id='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(238, 238, 0, 0.5);'></div>");
+        highlightDivs = highlightDivs + (" <div id='highlight-"+i+"'class='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(238, 238, 0, 0.5);'></div>");
         // console.log(highlightDivs);
 
 
@@ -148,9 +157,9 @@ background: rgba(255, 0, 0, 0.4);'></div>\
 
 function buildChart(id) {
     d3.selectAll('#' + id+" > *").remove();
-    var colours = ["rgba(255,100,100,0.5)", "rgba(100,255,100,0.5)", "rgba(100,100,255,0.5)"];
+    var colours = ["rgba(179, 0, 0,0.1)", "rgba(0, 64, 128,0.1)", "rgba(0, 128, 32,0.1)	"];
     // var diameter = $('#' + id).width();
-    var diameter=Math.min($(window).height(),$(window).width());
+    var diameter=Math.min($(window).height(),$(window).width())*0.85;
 
     var format = d3.format(",d"),
         dataSource = 0;
@@ -166,7 +175,8 @@ function buildChart(id) {
 
     var svg = d3.select("#chartArea").append("svg")
         .attr("width", diameter)
-        .attr("height", diameter);
+        .attr("height", diameter)
+        .style("margin-left",$(window).width()/2 - diameter/2+"px");
 
 
     var data = globalChartData;
@@ -176,7 +186,7 @@ function buildChart(id) {
         .enter()
         .append("g");
 
-    var titles = vis.append("title")
+        var titles = vis.append("title")
         .attr("x", function (d) {
             return d.x;
         })
@@ -187,6 +197,30 @@ function buildChart(id) {
             return d.name +
                 (d.children ? "" : ": " + format(d.value));
         });
+        var labels = vis.append("text")
+        .attr("x", function (d) {
+            return d.x;
+        })
+        .attr("y", function (d) {
+            return d.y;
+        })
+        .attr("text-anchor","middle")
+        .attr("font-size","0px")
+        .text(function (d) {
+            if (d.r<maxR/2 &&d.r>maxR/10 && !(d.name=="Root"))
+                return d.name;
+            return "";    
+        })
+        .transition()
+        .duration(function(d){ 
+            //  console.log(250* ((maxR-minR)/d.r)  );                       
+            return Math.min(110 * ((maxR-minR)/d.r),3500) ;}
+            )
+        .attr("font-size", function (d) {
+            // console.log("radius");
+            // console.log(d.r);
+            return "10px";
+        });;
 
     var circles = vis.append("circle")
         .attr("stroke", function (d) {
@@ -228,7 +262,7 @@ function buildChart(id) {
         .transition()
         .duration(function(d){ 
             //  console.log(250* ((maxR-minR)/d.r)  );                       
-            return Math.min(250 * ((maxR-minR)/d.r),10000) ;}
+            return Math.min(110 * ((maxR-minR)/d.r),3500) ;}
             )
         .attr("r", function (d) {
             // console.log("radius");
@@ -1228,10 +1262,46 @@ function searchHandler()
 }
 
 function highlightGetter(buttonId,PranetID) {
-    // console.log("button");
-    // console.log(buttonId);
-    // console.log("PranetID");
-    // console.log(PranetID);
+    console.log(buttonId,PranetID);
+    var $currentHighlight;
+    if($("#"+PranetID+" .currentHighlight").length==0)
+    {
+        $currentHighlight=$("#"+PranetID+" .highlight").first();
+    }
+    else
+    {
+        if(buttonId=="next" && $("#"+PranetID+" .currentHighlight").next().length!=0 )
+            $currentHighlight=$("#"+PranetID+" .currentHighlight").next();
+        else 
+        {
+            if( $("#"+PranetID+" .currentHighlight").next().length==0)
+            {
+                $currentHighlight=$("#"+PranetID+" .highlight").first();
+
+            }
+        }    
+        if(buttonId=="prev" && $("#"+PranetID+" .currentHighlight").prev().length!=0 )
+            $currentHighlight=$("#"+PranetID+" .currentHighlight").prev();
+        else 
+        {
+            if( $("#"+PranetID+" .currentHighlight").prev().length==0)
+            {
+                $currentHighlight=$("#"+PranetID+" .highlight").last();
+
+            }
+        }     
+        $("#"+PranetID+" .currentHighlight").removeClass("currentHighlight");
+    }
+    $currentHighlight.addClass("currentHighlight");
+    console.log($currentHighlight);
+    // if(!$(".currentHighlight").length)
+    //     $toBeGottenElemen=$('#'+PranetID+" #highlight").first();
+    // else    $toBeGottenElemen =$(".currentHighlight").  
+    $('#'+PranetID).animate({
+        scrollTop: $currentHighlight.offset().top - $("#"+PranetID).height() / 2 - $currentHighlight.height() / 2,
+        scrollLeft: $currentHighlight.offset().left - $("#"+PranetID).width() / 2 - $currentHighlight.height() / 2
+    }, 1000);
+
 };
 
 
@@ -1348,15 +1418,19 @@ function tableInit() {
     };
     var colM = [{
             title: "",
-            minWidth: 27,
-            maxWidth: 27,
+            minWidth: '5%',
+            maxWidth: '5%',
             type: "detail",
             resizable: false,
             editable: false,
+            render: function (ui) {
+                 console.log(ui);
+                return '<button class="ui-button ui-button-text-only ui-widget ui-state-default ui-corner-all">&nbspMORE&nbsp</button>';
+            }
         },
         {
             minWidth: '10%',
-            title: "File",
+            title: "",
             halign:"center",
             dataIndx: "id",
             render: function (ui) {
@@ -1367,37 +1441,51 @@ function tableInit() {
             }
 
         },
-        {
-            minWidth: '10%',
-            title: "Created on",
-            halign:"center",
-            dataIndx: "created_on",
-            // filter: {
-            //     type: 'textbox',
-            //     init: pqDatePicker,
-            //     listeners: ['change',{'change':function(evt, ui){
-            //         if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
-            //         if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
-            //     }}]
-            // }
-        },
-        {
-            minWidth: '10%',
-            title: "Created by",
-            halign:"center",
-            dataIndx: "created_by",
-            // filter: {
-            //     type: 'textbox',
-            //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
-            // }
-        },
+        // {
+        //     minWidth: '10%',
+        //     title: "Created on",
+        //     halign:"center",
+        //     dataIndx: "created_on",
+        //     // filter: {
+        //     //     type: 'textbox',
+        //     //     init: pqDatePicker,
+        //     //     listeners: ['change',{'change':function(evt, ui){
+        //     //         if (ui.value!="") globalFromDate=ui.value; else globalFromDate="*"; 
+        //     //         if (ui.value2!="") globalToDate=ui.value2; else globalToDate="*";
+        //     //     }}]
+        //     // }
+        // },
+        // {
+        //     minWidth: '10%',
+        //     title: "Created by",
+        //     halign:"center",
+        //     dataIndx: "created_by",
+        //     // filter: {
+        //     //     type: 'textbox',
+        //     //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globalAuthor=ui.value; else globalAuthor="*"; }}]
+        //     // }
+        // },
      
         {
             minWidth: '30%',
-            title: "Describtion",
-            halign:"left",
+            title: "الوصف",
+            halign:"right",
             align:"right",
             dataIndx: "file_description",
+            render: function (ui) {
+                // console.log(ui);
+                var desc = ui.rowData.file_description;
+                return '<div style="font-style: bold;font-size: 25px;">\
+                '+desc+'\
+              </div>\
+              <div style="font-size: 13px;color: blue;display:inline-block">'+ui.rowData.created_on+'\
+              </div>\
+              <div style="font-size: 13px;color: blue;display:inline-block"">  :تاريخ &nbsp</div>\
+              <div style="font-size: 13px;color: blue;display:inline-block">'+ui.rowData.created_by+'\
+              </div>\
+              <div style="font-size: 13px;color: blue;display:inline-block""> :بواسطة</div>\
+              ';
+                        }
             // filter: {
             //     type: 'textbox',
             //     listeners: ['change',{'change':function(evt, ui){if (ui.value!="") globaldescription=ui.value; else globaldescription="*"; }}]
@@ -1423,8 +1511,10 @@ function tableInit() {
     }
     var obj = {
         dataModel: dataModel,
+        columnBorders: false,
         colModel: colM,
         virtualX: true,
+        numberCell: {show: false},
         virtualY: true,
         pageModel: {
             type: 'local',
@@ -1433,7 +1523,7 @@ function tableInit() {
         height: "flex",
         editable: false,
         selectionModel: {
-            type: 'cell'
+            type: null
         },
         filterModel: {
             on: true,

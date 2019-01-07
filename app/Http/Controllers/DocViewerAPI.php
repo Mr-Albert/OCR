@@ -90,7 +90,7 @@ class DocViewerAPI extends Controller
 
             if (curl_errno($ch)) {
                 // return "{}";
-                return array("type" => "image", "content" => $id,"id"=>"test.jpg","hocr"=>["5 500 500 1000 1000"]);
+                return array("type" => "image", "content" => $id,"id"=>"test.jpg","hocr"=>["5 500 500 1000 1000","6 100 100 200 200","7 200 200 300 300"]);
             }
             eval("\$output = " . $output . ";");
             // close curl resource to free up system resources

@@ -49,10 +49,20 @@
         overflow: auto !important;
         max-height:400px;
     }
+    .pq-grid td.pq-grid-col
+    {
+    
+    border-right: 0px solid #cfcfcf !important;
+    }
     em
     {
         font-style: italic;
         background-color: yellow;
+
+    }
+    .currentHighlight
+    {
+        border: solid 1px red;
 
     }
     
