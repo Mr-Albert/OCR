@@ -98,26 +98,26 @@ function pqDatePicker(ui) {
 }
 
 function highlightAdapter(imageSrc, highlights) {
-    console.log("highlights\\");
-    console.log(highlights);
-    console.log("highlights/");
+    //console.log("highlights\\");
+    //console.log(highlights);
+    //console.log("highlights/");
 
     var highlightDivs = ""
     for (var i = 0; i < highlights.length; i++) {
         // x y x2 y2
         var currentDiv = highlights[i].split(" ");
-        console.log("    a highlight\\");
-        console.log(highlights[i]);
-         console.log("    highlight/");
+        //console.log("    a highlight\\");
+        //console.log(highlights[i]);
+         //console.log("    highlight/");
         currentDiv[4] = parseInt(currentDiv[4]) - parseInt(currentDiv[2]);
         currentDiv[3] = parseInt(currentDiv[3]) - parseInt(currentDiv[1]);
-        // console.log(currentDiv);
+        // //console.log(currentDiv);
         highlightDivs = highlightDivs + (" <div id='highlight-"+i+"'class='highlight' style='position:absolute;width:" + currentDiv[3] + "px;height:" + currentDiv[4] + "px;top:" + currentDiv[2] + "px;left:" + currentDiv[1] + "px;background: rgba(238, 238, 0, 0.5);'></div>");
-        // console.log(highlightDivs);
+        // //console.log(highlightDivs);
 
 
     }
-    // console.log(highlightDivs);
+    // //console.log(highlightDivs);
     content = "<div id='container' style='position:relative;'>\
 <img src='" + imageSrc + "' />" + highlightDivs + "</div>";
     return content;
@@ -213,12 +213,12 @@ function buildChart(id) {
         })
         .transition()
         .duration(function(d){ 
-            //  console.log(250* ((maxR-minR)/d.r)  );                       
+            //  //console.log(250* ((maxR-minR)/d.r)  );                       
             return Math.min(110 * ((maxR-minR)/d.r),3500) ;}
             )
         .attr("font-size", function (d) {
-            // console.log("radius");
-            // console.log(d.r);
+            // //console.log("radius");
+            // //console.log(d.r);
             return "10px";
         });;
 
@@ -231,10 +231,10 @@ function buildChart(id) {
         .style("fill", function (d) {
             if (d.name == "root" || d.name == "Root")
                 return "transparent";
-            // console.log(d);
+            // //console.log(d);
             var coleuer = "rgba(" + Math.floor(Math.random() * (Math.floor(d.r) + 220)) + "," + Math.floor(Math.random() * (Math.floor(d.r) + 220)) +
                 "," + Math.floor(Math.random() * (Math.floor(d.r) + 220)) + ",1)";
-            // console.log(coleuer);
+            // //console.log(coleuer);
             return colours[Math.floor((Math.random() * 3))];
         })
         .attr("cx", function (d) {
@@ -246,27 +246,27 @@ function buildChart(id) {
         .attr("r", function (d) {
             if(d.r==NaN||d.r==undefined)
                 return 0;
-            // console.log("radius before");
-            // console.log(maxR);
-            // console.log(d.r);
+            // //console.log("radius before");
+            // //console.log(maxR);
+            // //console.log(d.r);
             maxR=Math.max(maxR,d.r);
             minR=Math.min(minR,d.r);
 
-            // console.log("///////");
+            // //console.log("///////");
             return d.r * 0.1;
         })
         .on("click", function(d) {
-            // console.log("node Data");
-            // console.log(d);
+            // //console.log("node Data");
+            // //console.log(d);
         })
         .transition()
         .duration(function(d){ 
-            //  console.log(250* ((maxR-minR)/d.r)  );                       
+            //  //console.log(250* ((maxR-minR)/d.r)  );                       
             return Math.min(110 * ((maxR-minR)/d.r),3500) ;}
             )
         .attr("r", function (d) {
-            // console.log("radius");
-            // console.log(d.r);
+            // //console.log("radius");
+            // //console.log(d.r);
             return d.r;
         });
     // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" });
@@ -1247,13 +1247,13 @@ function searchHandler()
             srch: globalSearch
         },
         success: function (responseData) {
-            // console.log(responseData);
+            // //console.log(responseData);
             //fill table
             $("#table").pqGrid("option", "dataModel.data", responseData.tableData);
             $("#table").pqGrid("refreshView");
             //fill graph here
             globalChartData=responseData.graphData;
-            // console.log(globalChartData);
+            // //console.log(globalChartData);
             buildChart("chartArea");
         },
 
@@ -1262,7 +1262,7 @@ function searchHandler()
 }
 
 function highlightGetter(buttonId,PranetID) {
-    console.log(buttonId,PranetID);
+    //console.log(buttonId,PranetID);
     var $currentHighlight;
     if($("#"+PranetID+" .currentHighlight").length==0)
     {
@@ -1293,13 +1293,21 @@ function highlightGetter(buttonId,PranetID) {
         $("#"+PranetID+" .currentHighlight").removeClass("currentHighlight");
     }
     $currentHighlight.addClass("currentHighlight");
-    console.log($currentHighlight);
+    // //console.log($currentHighlight);
     // if(!$(".currentHighlight").length)
     //     $toBeGottenElemen=$('#'+PranetID+" #highlight").first();
     // else    $toBeGottenElemen =$(".currentHighlight").  
+    // console.log($currentHighlight.position().top );
+    
+    var parent = document.querySelector("#"+PranetID),elem=document.querySelector('.currentHighlight');
+    var top=-parent.getBoundingClientRect().top+elem.getBoundingClientRect().top;
+    var left= $currentHighlight.offset().left - $("#"+PranetID).width() / 2 - $currentHighlight.height() / 2;
+    console.log(top,left);
+    // var top=$currentHighlight.offset().top - $("#"+PranetID).height() / 2 - $currentHighlight.height() / 2;
+    // var left= $currentHighlight.offset().left - $("#"+PranetID).width() / 2 - $currentHighlight.height() / 2;
     $('#'+PranetID).animate({
-        scrollTop: $currentHighlight.offset().top - $("#"+PranetID).height() / 2 - $currentHighlight.height() / 2,
-        scrollLeft: $currentHighlight.offset().left - $("#"+PranetID).width() / 2 - $currentHighlight.height() / 2
+        scrollTop: top,
+        scrollLeft:left
     }, 1000);
 
 };
@@ -1308,7 +1316,7 @@ function highlightGetter(buttonId,PranetID) {
 //event handlers goes here
 function eventHandlers() {
     window.onresize = function(event) {
-        console.log($( "#tabs" ).tabs( "option", "active" ));
+        //console.log($( "#tabs" ).tabs( "option", "active" ));
         if($( "#tabs" ).tabs( "option", "active" )==1) 
             buildChart("chartArea");
     };
@@ -1386,11 +1394,11 @@ function DOMInits() {
                         $("#dialog").dialog("close");
                         if (accepted) {
                             $('#fileDescription').attr('value', description);
-                            // console.log($('#fileDescription').attr('value'));
+                            // //console.log($('#fileDescription').attr('value'));
                             $('#loading').text('Uploading...');
                             //data.files[0].description=description;
-                            // console.log(description);
-                            // console.log(data);
+                            // //console.log(description);
+                            // //console.log(data);
                             data.submit();
                         }
                     }
@@ -1399,7 +1407,7 @@ function DOMInits() {
 
         },
         done: function (e, data) {
-            // console.log("finished");
+            // //console.log("finished");
             $('#loading').text('');
         }
     });
@@ -1424,7 +1432,7 @@ function tableInit() {
             resizable: false,
             editable: false,
             render: function (ui) {
-                 console.log(ui);
+                 //console.log(ui);
                 return '<button class="ui-button ui-button-text-only ui-widget ui-state-default ui-corner-all">&nbspMORE&nbsp</button>';
             }
         },
@@ -1434,7 +1442,7 @@ function tableInit() {
             halign:"center",
             dataIndx: "id",
             render: function (ui) {
-                // console.log(ui);
+                // //console.log(ui);
                 var id = ui.rowData.id;
                 var iconType = types[(id.substr(id.length - 3)).toLowerCase()] + ".png";
                 return "<div id='" + id + "' ><a href='DOCSAPI/down?fileName=" + id + "'  target='_blank'><img style='margin-left:44%;width:12%;height:12%;' src = '/" + iconType.toLowerCase() + "'' /></a></div>";
@@ -1473,7 +1481,7 @@ function tableInit() {
             align:"right",
             dataIndx: "file_description",
             render: function (ui) {
-                // console.log(ui);
+                // //console.log(ui);
                 var desc = ui.rowData.file_description;
                 return '<div style="font-style: bold;font-size: 25px;">\
                 '+desc+'\
@@ -1503,7 +1511,7 @@ function tableInit() {
             settings.url += "&content=" + globalSearch;
         },
         getData: function (dataJSON) {
-            // console.log(dataJSON);
+            // //console.log(dataJSON);
             return {
                 data: dataJSON
             };
