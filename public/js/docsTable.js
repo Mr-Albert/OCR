@@ -25,7 +25,9 @@ function initDetail(ui) {
         success: function (responseData) {
             responseDataM = responseData;
             if (responseData.type == "image") {
-                var tempDetail="<div id='grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase()+"' style='display:inline-block;overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'><div style='position:absolute;z-index:9000;'><br><button onclick='highlightGetter(\"prev\",\"grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase()+"\")' style='display:inline-block' class='highlightGetter ui-button-icon-primary ui-icon ui-icon-seek-prev' id='prevHighlight'>PREV</button><button class='highlightGetter ui-button-icon-primary ui-icon ui-icon-seek-next' style='display:inline-block' onclick='highlightGetter(\"next\",\"grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase()+"\")' id='nextHighlight'>NEXT</button></div>";
+                // myStr.replace(/_/g, "-");
+                // rowData.id = rowData.id.replace("/","-");
+                var tempDetail="<div id='grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase().replace("/","-")+"' style='display:inline-block;overflow-y: scroll; height:400px;' id='pq-detail' tabindex='0'><div style='position:absolute;z-index:9000;'><br><button onclick='highlightGetter(\"prev\",\"grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase().replace("/","-")+"\")' style='display:inline-block' class='highlightGetter ui-button-icon-primary ui-icon ui-icon-seek-prev' id='prevHighlight'>PREV</button><button class='highlightGetter ui-button-icon-primary ui-icon ui-icon-seek-next' style='display:inline-block' onclick='highlightGetter(\"next\",\"grand-"+rowData.id.substr(0,rowData.id.length - 4).toLowerCase().replace("/","-")+"\")' id='nextHighlight'>NEXT</button></div>";
                 $detail = $(tempDetail
                  + highlightAdapter(rowData.id, responseData.hocr) + "</div>");
 
