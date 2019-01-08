@@ -1302,8 +1302,8 @@ function highlightGetter(buttonId,PranetID) {
     // console.log($currentHighlight.position().top );
     
     var parent = document.querySelector("#"+PranetID),elem=document.querySelector('.currentHighlight');
-    var top=-parent.getBoundingClientRect().top+elem.getBoundingClientRect().top;
-    var left= $currentHighlight.offset().left - $("#"+PranetID).width() / 2 - $currentHighlight.height() / 2;
+    var top=-parent.getBoundingClientRect().top+elem.getBoundingClientRect().top-$currentHighlight.height() / 2;
+    var left= parent.getBoundingClientRect().left+elem.getBoundingClientRect().left-$currentHighlight.width() / 2;
     console.log(top,left);
     // var top=$currentHighlight.offset().top - $("#"+PranetID).height() / 2 - $currentHighlight.height() / 2;
     // var left= $currentHighlight.offset().left - $("#"+PranetID).width() / 2 - $currentHighlight.height() / 2;
