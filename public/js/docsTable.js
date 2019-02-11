@@ -209,7 +209,7 @@ function buildChart(id) {
         .attr("text-anchor","middle")
         .attr("font-size","0px")
         .text(function (d) {
-            if (d.r<maxR/2 &&d.r>maxR/10 && !(d.name=="Root"))
+            if (d.r>maxR/10 && !(d.name=="Root"))
                 return d.name;
             return "";    
         })
