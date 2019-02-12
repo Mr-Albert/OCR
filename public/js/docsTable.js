@@ -1,6 +1,6 @@
 //globals
 var globaldescription = "*",
-    globalClass = "*",
+    globalClass = "\"*\"",
     globalSearch = "*",
     globalAuthor = "*",
     globalFromDate = "*",
@@ -259,7 +259,9 @@ function buildChart(id) {
         })
         .on("click", function(d) {
             // //console.log("node Data");
-            // //console.log(d);
+            console.log(d);
+            //$("#seachTextArea").val(d.value);
+            //searchHandler();
         })
         .transition()
         .duration(function(d){ 
@@ -1225,18 +1227,17 @@ function searchHandler()
     $( "#tabs" ).tabs( "option", "active", 0 );
     globalSearch = $("#seachTextArea").val();
     if (globalSearch == "") globalSearch = "*";
-    globaldescription=($("#describtionSearch").val().trim());
-    (globaldescription==""||globaldescription==null)? globaldescription="*":globaldescription=globaldescription;
-    globalAuthor=($("#authorSearch").val().trim());
-    (globalAuthor==""||globalAuthor==null)? globalAuthor="*":globalAuthor=globalAuthor;
-    globalClass=($("#classSearch").val().trim());
-    (globalClass==""||globalClass==null)? globalClass="*":globalClass=globalClass;
+    // globaldescription=($("#describtionSearch").val().trim());
+    // (globaldescription==""||globaldescription==null)? globaldescription="*":globaldescription=globaldescription;
+    // globalAuthor=($("#authorSearch").val().trim());
+    // (globalAuthor==""||globalAuthor==null)? globalAuthor="*":globalAuthor=globalAuthor;
+    (globalClass==""||globalClass==null||globalClass==[])? globalClass="\"*\"":globalClass=globalClass;
     globalFromDate=($("#DateSearch").val().split("TO")[0].trim());
     (globalFromDate==""||globalFromDate==null)? globalFromDate="*":globalFromDate=globalFromDate;
     globalToDate=($("#DateSearch").val().split("TO")[1].trim());
     (globalToDate==""||globalToDate==null)? globalToDate="*":globalToDate=globalToDate;
 
-    var pq_filter = 'pq_filter: {"mode":"AND","data":[{"dataIndx":"class","value":' + globalClass + ',"dataType":"string"\
+    var pq_filter = '{"mode":"AND","data":[{"dataIndx":"class","value":' + globalClass + ',"dataType":"string"\
 ,"cbFn":""},{"dataIndx":"content","value":"' + globaldescription + '","dataType":"string","cbFn":""}\
 ,{"dataIndx":"date","value":"' + globalFromDate + ' TO ' + globalToDate + '","dataType":"string","cbFn":""}\
 ,{"dataIndx":"author","value":"' + globalAuthor + '","dataType":"string","cbFn":""}]}';
@@ -1368,7 +1369,14 @@ function eventHandlers() {
         }
     } );
 
-
+    $("#classSearch")
+    .on("change", function(evt){
+        var val = $(this).val();
+        globalClass="\""+val.join(",")+"\"";
+        console.log(val);
+        searchHandler();
+    })
+    ;
 }
 //inits DOM goes here
 
@@ -1393,10 +1401,12 @@ function DOMInits() {
                     click: function () {
                         accepted = true;
                         description = $('#description').val();
+                        inputClass = $('#inputClass').val();
+                        console.log(inputClass);
                         $("#dialog").dialog("close");
                         if (accepted) {
                             $('#fileDescription').attr('value', description);
-                            // //console.log($('#fileDescription').attr('value'));
+                            $('#theInputClass').attr('value', inputClass);
                             $('#loading').text('Uploading...');
                             //data.files[0].description=description;
                             // //console.log(description);
@@ -1414,7 +1424,19 @@ function DOMInits() {
         }
     });
     buildChart("chartArea");
-
+    
+    $("#classSearch").pqSelect({
+        multiplePlaceholder: 'Class',    
+        maxDisplay: 3,
+        checkbox: true //adds checkbox to options    
+    })
+    // .on("change", function(evt){
+    //     var val = $(this).val();
+    //     $("#selected_option1")
+    //         .text("Selected option: "+val);
+    // }).pqSelect( 'open' )
+    ;
+    
 }
 
 function tableInit() {
@@ -1544,6 +1566,7 @@ function tableInit() {
 Files:<br>\
 <input type="hidden" name="_token" value="' + $('meta[name="_token"]').attr('content') + '" />\
 <input type="hidden" id="fileDescription" name="fileDescription" value="" />\
+<input type="hidden" id="theInputClass"   name="theInputClass"   value="" />\
 <input class="ui-widget-header ui-widget-header ui-state-active" type="file" id="fileupload" name="files[]" data-url="/upload" />\
 <p id="loading"></p>\
 </form>',

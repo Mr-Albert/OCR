@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row">
+<style>
+.pq-select-button.pq-no-capture.ui-state-default.ui-widget.ui-corner-all.pq-select-multiple
+{
+    margin-top:4px;
+}
+</style>
+<div class="row">
         
 
 <meta name="_token" content="{{ csrf_token() }}">
@@ -15,24 +21,19 @@
                                 placeholder="Search / بحث">
                             <button id="searchButton"></button>               
                         </div>
-                        <div class="item2" style="  grid-column-start: 6; grid-column-end: 9;">
+                        {{-- <div class="item2" style="  grid-column-start: 6; grid-column-end: 9;"> --}}
                             {{-- Describtion --}}
-                        <input id="describtionSearch"  placeholder="Describtion" > </div>        
-                        <div class="item3" style="  grid-column-start: 9; grid-column-end: 12;">
+                        {{-- <input id="describtionSearch"  placeholder="Describtion" > </div>         --}}
+                        {{-- <div class="item3" style="  grid-column-start: 9; grid-column-end: 12;"> --}}
                             {{-- Created by --}}
-                        <input id="authorSearch"  placeholder="Created by"  ></div>
+                        {{-- <input id="authorSearch"  placeholder="Created by"  ></div> --}}
                         <div class="item5" style="  grid-column-start: 12; grid-column-end: 13;">
                             {{-- Class --}}
                             {{-- <input id="classSearch" style="width:100%; "  placeholder="class" > --}}
-                            <select id="classSearch" style="width:100%;color:black; ">
-                                    <option selected disabled>Class</option>
-                                    <option selected >Class1</option>
-                                    <option selected >Class2</option>
-
-                                {{-- <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option> --}}
+                            <select id="classSearch" style="width:100%;color:black; " multiple>
+                                    <option value="3">سرى للغاية</option>
+                                    <option  value="2">سرى</option>
+                                    <option  value="1">عادى</option>
                             </select>         
                         </div>
                         <div class="item4" style="  grid-column-start: 14; grid-column-end: 20">
@@ -73,6 +74,12 @@
                    <div id="dialog" title="Basic dialog" style="display: none;">
                         <p>File Description</p>
                         <input type="text" id="description"  />
+                        <p>Class</p>
+                        <select id="inputClass" style="width:100%;color:black; " >
+                            <option value="3">سرى للغاية</option>
+                            <option  value="2">سرى</option>
+                            <option  value="1">عادى</option>
+                        </select>         
                       </div>
             </div>
         </div>
