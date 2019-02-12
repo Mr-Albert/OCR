@@ -129,6 +129,8 @@ class DocViewerAPI extends Controller
         if ($request->input("srch") != '') {
             $queryArray["content"] = $request->input("srch");
         }
+        $srchValue=$queryArray["content"];      
+        // return $queryArray["content"];
         if (gettype($filter) == "object" && property_exists($filter, "data")) {
             $filterData = $filter->data;
             foreach ($filterData as $filterDatum) {
@@ -156,7 +158,7 @@ class DocViewerAPI extends Controller
         // print_r($response);
         // echo "returning";
         // return;
-        $srchValue=$queryArray["content"];
+        // $srchValue=$queryArray["content"];
 		////////
         // $classes=explode($queryArray["class"],",");
         //return $queryArray["class"];
@@ -172,7 +174,7 @@ class DocViewerAPI extends Controller
 		curl_setopt($ch, CURLOPT_URL, $testURl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
-
+        // return $srchValue;
         if (curl_errno($ch)) {
             // return "{}";
            // return "error";
@@ -196,7 +198,7 @@ class DocViewerAPI extends Controller
 		//////////
         $ch = curl_init();
         $testURl = config('app.solr')["url"] . ":" . config('app.solr')["port"] . "/solr/" . config('app.solr')["collection"] . "/select?q=content:" . urlencode($srchValue).urlencode(" AND ").urlencode($classSearch) . ("&fl=id,last_modified,title,created_by,created_on,file_description,highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
-        //  echo $testURl;
+          // echo $testURl;
 		// return;
 	  // echo $testURl;
    //      return;

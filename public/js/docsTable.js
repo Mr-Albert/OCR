@@ -260,8 +260,8 @@ function buildChart(id) {
         .on("click", function(d) {
             // //console.log("node Data");
             console.log(d);
-            //$("#seachTextArea").val(d.value);
-            //searchHandler();
+            $("#seachTextArea").val(d.name);
+            searchHandler();
         })
         .transition()
         .duration(function(d){ 
