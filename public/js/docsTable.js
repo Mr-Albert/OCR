@@ -1428,8 +1428,7 @@ function tableInit() {
     };
     var colM = [{
             title: "",
-            minWidth: '5%',
-            maxWidth: '5%',
+            width: '5%',
             type: "detail",
             resizable: false,
             editable: false,
@@ -1439,7 +1438,7 @@ function tableInit() {
             }
         },
         {
-            minWidth: '10%',
+            width: '10%',
             title: "",
             halign:"center",
             dataIndx: "id",
@@ -1447,7 +1446,7 @@ function tableInit() {
                 // //console.log(ui);
                 var id = ui.rowData.id;
                 var iconType = types[(id.substr(id.length - 3)).toLowerCase()] + ".png";
-                return "<div id='" + id + "' ><a href='DOCSAPI/down?fileName=" + id + "'  target='_blank'><img style='margin-left:44%;width:12%;height:12%;' src = '/" + iconType.toLowerCase() + "'' /></a></div>";
+                return "<div id='" + id + "' ><a href='DOCSAPI/down?fileName=" + id + "'  target='_blank'><img style='margin-left:44%;width:22%;height:22%;' src = '/" + iconType.toLowerCase() + "'' /></a></div>";
             }
 
         },
@@ -1477,7 +1476,7 @@ function tableInit() {
         // },
      
         {
-            minWidth: '30%',
+            width: '85%',
             title: "الوصف",
             halign:"right",
             align:"right",
