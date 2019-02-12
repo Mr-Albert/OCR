@@ -55,7 +55,11 @@ class DocViewerAPI extends Controller
         if (strpos($id, '.pdf') !== false) {
             //get contents from solr
             $ch = curl_init();
-            $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=(id:" . urlencode($id) .urlencode(" AND content:" . $srch). (")&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+            $highlightQuery=(")&fl=highlighting&hl.fl=content&hl=on&hl.fragsize=0&wt=php");
+            if($request->input('srch')=="*" ||$request->input('srch')=="")
+               $highlightQuery= (")&wt=php");
+            $testURl = config('app.solr')['url'] . ":" . config('app.solr')['port'] . "/solr/" . config('app.solr')['collection'] . "/select?q=(id:" . urlencode($id) .urlencode(" AND content:" . $srch). $highlightQuery;
+            //return $testURl;
             curl_setopt($ch, CURLOPT_URL, $testURl);
             //return the transfer as a string
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -70,8 +74,10 @@ class DocViewerAPI extends Controller
             eval("\$output = " . $output . ";");
             // close curl resource to free up system resources
             curl_close($ch);
-            
-            $responseData = array("type" => "pdf", "content" => $output['highlighting'][$id]['content']);
+            if($request->input('srch')=="*" or $request->input('srch')=="")
+              $responseData = array("type" => "pdf", "content" => $output["response"]["docs"][0]["content"]);
+            else    
+              $responseData = array("type" => "pdf", "content" => $output['highlighting'][$id]['content']);
             return $responseData;
                 // echo"<br>";
             
